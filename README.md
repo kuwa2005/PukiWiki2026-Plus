@@ -44,14 +44,15 @@ pukiwiki2026/
 
 ## バージョン管理
 
-本フォルダは **git 未初期化** の状態で始められます。履歴管理が必要な場合は、作業者の判断で初期化してください。
+リポジトリ: **https://github.com/kuwa2005/PukiWiki2026**（ブランチ `main`、上流タグ `upstream-1.5.4-utf8`）
 
 ```powershell
 cd D:\00_project\pukiwiki2026
-git init
+git pull origin main   # 作業前に同期
+# 変更後: git add … → git commit → git push origin main
 ```
 
-`.env` や `wiki/`・`cache/` 等は `.gitignore` で除外済みです。
+`.env` や `wiki/`・`cache/`・`vendor/pukiwiki-1.5.4_utf8/` 等は `.gitignore` で除外済みです。
 
 ## 参考リンク
 
