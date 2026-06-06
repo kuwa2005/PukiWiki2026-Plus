@@ -39,6 +39,10 @@ git push -u origin feature/my-change
 
 **禁止:** `git push --force`（`main` への force push も含む）
 
+### main の branch protection
+
+GitHub 上の `main` は branch protection 済み（force push 禁止・ブランチ削除禁止・admin もルール適用）。CI 未導入のため status check は未要求。機能改造は `feature/*` → PR → `main` を推奨。
+
 ## コミットメッセージ
 
 - **日本語可**
