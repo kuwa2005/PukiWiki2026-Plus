@@ -107,9 +107,14 @@ function get_filename($page)
 // Put a data(wiki text) into a physical file(diff, backup, text)
 function page_write($page, $postdata, $notimestamp = FALSE)
 {
-	global $autoalias, $aliaspage;
+	global $autoalias, $aliaspage, $edit_auth;
 
 	if (PKWK_READONLY) return; // Do nothing
+
+	// Defense in depth: block writes when edit_auth denies the page
+	if ($edit_auth && ! is_page_writable($page)) {
+		return;
+	}
 
 	$postdata = make_str_rules($postdata);
 	$timestamp_to_keep = null;
