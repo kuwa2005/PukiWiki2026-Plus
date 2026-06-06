@@ -323,6 +323,174 @@ function ensure_page_writable($page) {
 }
 
 /**
+ * Resolve a page name from request variables for auth checks.
+ *
+ * @param array $vars
+ * @return string
+ */
+function pkwk_resolve_auth_page($vars)
+{
+	if (isset($vars['page']) && $vars['page'] !== '') {
+		return $vars['page'];
+	}
+	if (isset($vars['refer']) && $vars['refer'] !== '') {
+		return $vars['refer'];
+	}
+	global $defaultpage;
+	return $defaultpage;
+}
+
+/**
+ * Plugins that may POST without mutating wiki content.
+ *
+ * @return array
+ */
+function pkwk_edit_auth_readonly_post_plugins()
+{
+	return array('search', 'loginform', 'saml', 'basicauthlogout');
+}
+
+/**
+ * cmd values that mutate wiki content or show mutation UI.
+ *
+ * @return array
+ */
+function pkwk_edit_auth_mutation_cmds()
+{
+	return array('edit', 'add', 'freeze', 'unfreeze', 'rename', 'copy', 'write');
+}
+
+/**
+ * plugin values that mutate wiki content or show mutation UI.
+ *
+ * @return array
+ */
+function pkwk_edit_auth_mutation_plugins()
+{
+	return array(
+		'comment', 'memo', 'insert', 'vote', 'article', 'paint',
+		'pcomment', 'attach', 'tracker', 'bugtrack', 'rename',
+		'newpage', 'template', 'backup', 'calendar_edit',
+	);
+}
+
+/**
+ * Whether attach plugin request is read-only (download/list/info).
+ *
+ * @param array $vars
+ * @return bool
+ */
+function pkwk_attach_is_readonly_request($vars)
+{
+	$pcmd = isset($vars['pcmd']) ? $vars['pcmd'] : '';
+	if (in_array($pcmd, array('info', 'open', 'list'), TRUE)) {
+		return TRUE;
+	}
+	if (isset($vars['openfile'])) {
+		return TRUE;
+	}
+	if ($pcmd === '' && isset($vars['delfile'])) {
+		return FALSE;
+	}
+	if ($pcmd === '' && ! empty($_FILES)) {
+		return FALSE;
+	}
+	$page = isset($vars['page']) ? $vars['page'] : '';
+	if ($pcmd === '' && ($page === '' || ! is_page($page))) {
+		return TRUE; // attach_list()
+	}
+	return FALSE;
+}
+
+/**
+ * Whether current request mutates wiki content or exposes mutation UI.
+ *
+ * @param array $vars
+ * @return bool
+ */
+function pkwk_is_mutation_request($vars)
+{
+	if (PKWK_READONLY) {
+		return FALSE;
+	}
+
+	$method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
+
+	if ($method === 'POST') {
+		if (empty($_POST) && empty($_FILES)) {
+			return FALSE;
+		}
+		if (isset($vars['plugin']) &&
+			in_array($vars['plugin'], pkwk_edit_auth_readonly_post_plugins(), TRUE)) {
+			return FALSE;
+		}
+		if (isset($vars['write'])) {
+			return TRUE;
+		}
+		if (! empty($_FILES)) {
+			return TRUE;
+		}
+		if (isset($vars['cmd']) &&
+			in_array($vars['cmd'], pkwk_edit_auth_mutation_cmds(), TRUE)) {
+			return TRUE;
+		}
+		if (isset($vars['plugin'])) {
+			if ($vars['plugin'] === 'attach' && pkwk_attach_is_readonly_request($vars)) {
+				return FALSE;
+			}
+			return in_array($vars['plugin'], pkwk_edit_auth_mutation_plugins(), TRUE);
+		}
+		return TRUE; // Unknown POST payload
+	}
+
+	if ($method === 'GET') {
+		if (isset($vars['cmd']) &&
+			in_array($vars['cmd'], pkwk_edit_auth_mutation_cmds(), TRUE)) {
+			return TRUE;
+		}
+		if (isset($vars['plugin'])) {
+			if ($vars['plugin'] === 'attach' && pkwk_attach_is_readonly_request($vars)) {
+				return FALSE;
+			}
+			return in_array($vars['plugin'], pkwk_edit_auth_mutation_plugins(), TRUE);
+		}
+	}
+
+	return FALSE;
+}
+
+/**
+ * Deny unauthenticated mutation access (login redirect or forbidden page).
+ *
+ * @param array $vars
+ */
+function deny_edit_auth_request($vars)
+{
+	global $edit_auth_pages, $_title_cannotedit;
+	basic_auth(pkwk_resolve_auth_page($vars), TRUE, TRUE,
+		$edit_auth_pages, $_title_cannotedit);
+}
+
+/**
+ * Block unauthenticated write/mutation requests when $edit_auth is enabled.
+ * Called from pukiwiki.php before plugin dispatch.
+ *
+ * @param array $vars
+ */
+function enforce_edit_auth_for_request($vars)
+{
+	global $edit_auth, $auth_user;
+
+	if (! $edit_auth || $auth_user !== '') {
+		return;
+	}
+	if (! pkwk_is_mutation_request($vars)) {
+		return;
+	}
+	deny_edit_auth_request($vars);
+}
+
+/**
  * Check a page is readable or not, show Auth UI in some cases.
  *
  * @param $page page name

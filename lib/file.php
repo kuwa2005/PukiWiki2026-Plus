@@ -113,6 +113,7 @@ function page_write($page, $postdata, $notimestamp = FALSE)
 
 	// Defense in depth: block writes when edit_auth denies the page
 	if ($edit_auth && ! is_page_writable($page)) {
+		ensure_page_writable($page);
 		return;
 	}
 

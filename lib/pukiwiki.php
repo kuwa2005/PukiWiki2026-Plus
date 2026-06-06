@@ -64,6 +64,7 @@ if (isset($vars['cmd'])) {
 }
 if ($plugin != '') {
 	ensure_valid_auth_user();
+	enforce_edit_auth_for_request($vars);
 	if (exist_plugin_action($plugin)) {
 		// Found and exec
 		$retvars = do_plugin_action($plugin);
