@@ -7,21 +7,15 @@
 
 ## [Unreleased]
 
-### Added
-
-- **`skin/classic/`** — 既定スキン（PukiWiki 標準 pukiwiki スキンをサブディレクトリ化、デザイン非改変）
-- **`skin/forge/`** — 新スキン（classic コピー + 配色・タイポグラフィ・余白の modern 化）
-- **`docs/DESIGN.md`** — スキン・オプション plugin の軽量設計方針
-
 ### Changed
 
-- **`default.ini.php`** — `$skin` による `SKIN_FILE` / `SKIN_ASSETS_DIR` 解決
-- **`pukiwiki.ini.php`**, **`pukiwiki.ini.php.example`** — 既定 `$skin = 'classic'`
-- ルート直下の `skin/pukiwiki.*`・`main.js`・`search2.js` を `skin/classic/` に移行
+- **スキン構成を v1.0.0 に復元** — PR #37（classic/forge サブディレクトリ化）・PR #39（React forge）・PR #41（React revert）を巻き戻し。`skin/pukiwiki.skin.php` 等を `skin/` 直下に戻し、`default.ini.php` の SKIN 解決ロジックを簡素化
+- **`pukiwiki.ini.php.example`** — `$skin` 設定を削除（サブディレクトリ方式廃止）
 
 ### Removed
 
-- **React forge（PR #39）** — 軽量・小サイズ最優先の方針に反するため revert。`skin/forge/ui/`・`dist/` を削除し、classic コピー + CSS 調整の軽量 forge に復元
+- **`skin/classic/`**, **`skin/forge/`** — サブディレクトリ方式のスキンを削除
+- **`docs/DESIGN.md`** — スキン分離設計ドキュメントを削除
 
 ---
 

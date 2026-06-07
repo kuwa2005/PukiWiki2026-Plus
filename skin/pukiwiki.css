@@ -7,23 +7,22 @@
  *   2001-2002 Originally written by yu-ji
  * License: GPL v2 or (at your option) any later version
  *
- * forge skin — modernized classic (PukiWiki2026)
+ * Default CSS
  */
 
 pre, dl, ol, p, blockquote {
-  line-height:150%;
+  line-height:130%;
 }
 blockquote {
   margin-left:32px;
 }
 body,td {
-  color:#1a1a2e;
-  background-color:#fafbfc;
-  margin:0 auto;
-  padding:0 1.25rem 2rem;
-  max-width:56rem;
-  font-size:95%;
-  font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color:black;
+  background-color:white;
+  margin-left:2%;
+  margin-right:2%;
+  font-size:90%;
+  font-family:verdana, arial, helvetica, Sans-Serif;
 }
 textarea {
   box-sizing:border-box;
@@ -31,77 +30,74 @@ textarea {
 }
 
 a:link {
-  color:#1d6b8a;
+  color:#215dc6;
   background-color:inherit;
   text-decoration:none;
 }
 a:active {
-  color:#1d6b8a;
-  background-color:#d4e8f0;
+  color:#215dc6;
+  background-color:#CCDDEE;
   text-decoration:none;
 }
 a:visited {
-  color:#6b4c7a;
+  color:#a63d21;
   background-color:inherit;
   text-decoration:none;
 }
 a:hover {
-  color:#145a75;
-  background-color:#d4e8f0;
+  color:#215dc6;
+  background-color:#CCDDEE;
   text-decoration:underline;
 }
 a.external-link:not(.external-link-silent)::after {
-  content:url(../../image/external-link.png);
+  content:url(../image/external-link.png);
   margin:3px;
 }
 
 h1, h2 {
-  font-family:inherit;
-  color:#1a1a2e;
-  background-color:#d8e8f0;
-  padding:.45em .6em;
+  font-family:verdana, arial, helvetica, Sans-Serif;
+  color:inherit;
+  background-color:#DDEEFF;
+  padding:.3em;
   border:0;
-  border-radius:4px;
-  margin:0 0 .6em 0;
+  margin:0 0 .5em 0;
 }
 h3 {
-  font-family:inherit;
-  border-bottom:3px solid #c5dce8;
-  border-top:1px solid #e8f0f4;
-  border-left:10px solid #c5dce8;
-  border-right:5px solid #e8f0f4;
+  font-family:verdana, arial, helvetica, Sans-Serif;
+  border-bottom:3px solid #DDEEFF;
+  border-top:1px solid #DDEEFF;
+  border-left:10px solid #DDEEFF;
+  border-right:5px solid #DDEEFF;
 
   color:inherit;
   background-color:#FFFFFF;
-  padding:.4em .5em;
-  margin:0 0 .6em 0;
+  padding:.3em;
+  margin:0 0 .5em 0;
 }
 h4 {
-  font-family:inherit;
-  border-left:18px solid #c5dce8;
+  font-family:verdana, arial, helvetica, Sans-Serif;
+  border-left:18px solid #DDEEFF;
 
   color:inherit;
   background-color:#FFFFFF;
-  padding:.35em .5em;
+  padding:.3em;
   margin:0 0 .5em 0;
 }
 h5, h6 {
-  font-family:inherit;
+  font-family:verdana, arial, helvetica, Sans-Serif;
   color:inherit;
-  background-color:#e8f0f4;
-  padding:.35em .5em;
+  background-color:#DDEEFF;
+  padding:.3em;
   border:0;
-  border-radius:3px;
   margin:0 0 .5em 0;
 }
 h1.title {
-  font-size:1.75rem;
-  font-weight:700;
-  letter-spacing:-0.02em;
+  font-size:30px;
+  font-weight:bold;
   background-color:transparent;
-  padding:1rem 0 0 0;
+  padding:12px 0 0 0;
   border:0;
-  margin:.75rem 0 0 0;
+  margin:12px 0 0 0;
 }
 
 dt {
@@ -355,17 +351,15 @@ strong.word9 {
 
 /* pukiwiki.skin.php */
 div#header {
-  padding:0 0 .75rem 0;
-  margin:0 0 .5rem 0;
-  border-bottom:1px solid #d0dde6;
+  padding:0;
+  margin:0;
   word-break:break-all;
 }
 
 div#navigator {
   clear:both;
-  padding:.5rem 0 0 0;
-  margin:0 0 .25rem 0;
-  font-size:92%;
+  padding:4px 0 0 0;
+  margin:0;
 }
 
 div#contents {

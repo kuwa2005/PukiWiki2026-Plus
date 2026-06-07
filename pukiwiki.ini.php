@@ -83,13 +83,10 @@ define('PLUGIN_DIR',    DATA_HOME . 'plugin/'   ); // Plugin directory
 
 // Skins / Stylesheets
 define('SKIN_DIR', 'skin/');
-// Skin files (SKIN_DIR/<name>/*.skin.php) are needed at
+// Skin files (SKIN_DIR/*.skin.php) are needed at
 // ./DATAHOME/SKIN_DIR from index.php, but
 // CSSs(*.css) and JavaScripts(*.js) are needed at
-// ./SKIN_DIR/<name>/ from index.php.
-
-// Active skin subdirectory (classic | forge)
-$skin = 'classic';
+// ./SKIN_DIR from index.php.
 
 // Static image files
 define('IMAGE_DIR', 'image/');
