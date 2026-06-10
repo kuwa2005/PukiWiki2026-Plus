@@ -9,6 +9,10 @@
 
 v1.0.1 以降の変更（次回リリース候補）。対応 PR: [#88](https://github.com/kuwa2005/PukiWiki2026/pull/88)・[#90](https://github.com/kuwa2005/PukiWiki2026/pull/90)・[#92](https://github.com/kuwa2005/PukiWiki2026/pull/92)・[#94](https://github.com/kuwa2005/PukiWiki2026/pull/94)。
 
+### Changed
+
+- **ISSUES.md** — 再監査記録 Issue #83 を closed に更新（オープン Issue なし）
+
 ### Added
 
 - **凍結ページの匿名 comment / article**（PR #88）— `$comment_auth = 0`（既定）で `#comment` / `#pcomment` / `#article` を凍結ページでも匿名投稿可能に。CAPTCHA（reCAPTCHA 未設定時 honeypot）、IP レート制限、既存 Akismet / 外部リンク制限 / CSRF と連携（`lib/comment.php`）。設定: `docs/ANTI-SPAM.md`・`docs/SETUP.md`
