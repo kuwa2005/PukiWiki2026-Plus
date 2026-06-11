@@ -1,90 +1,44 @@
 # PukiWiki2026 Plus
 
-**[PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026) の Fork 版 — overlay を上書き適用する拡張パック**（非公式）
+**[PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026) の Fork 版 — 直接開発ワークスペース**（非公式）
 
-PukiWiki2026 Plus は PukiWiki2026 の Fork 版です。稼働中の PukiWiki2026 インストールに **差分ファイル（overlay）を上書きコピー** すると Plus 相当の環境になります。本リポジトリは **PukiWiki2026 全ツリーを改変して同梱する fork ではありません**（overlay のみ管理）。
+PukiWiki2026 Plus は PukiWiki2026 をベースにした **フルツリー同梱の開発用リポジトリ** です。`pukiwiki/` 配下を自由に編集し、Plus 固有の UX（`skin2026/` 等）をここで開発・検証します。
 
 | 原則 | 内容 |
 |------|------|
-| **Core は PukiWiki2026** | 本体の開発・セキュリティ保守は [PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026) のみ |
-| **Plus は overlay のみ** | 本リポジトリは **PukiWiki2026 コードベースを直接改変しない** — Plus 固有ファイル・適用スクリプト・Plus 向けドキュメントのみ |
-| **適用方式** | 既存インストールへ overlay を上書き（[docs/UPGRADE.md](docs/UPGRADE.md) 参照） |
+| **Plus = 直接開発** | 本リポジトリの `pukiwiki/` を自由に改変する |
+| **Core = 参照のみ** | ローカル `D:\00_project\pukiwiki2026` は **読み取り専用参照**。Plus エージェントは触らない |
+| **overlay 廃止** | 旧 `plus/`・`upgrade/` overlay モデルは **非推奨・削除済み** |
 
-| 項目 | 内容 |
-|------|------|
-| 前提 | [PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026) v1.x 以上を設置済み |
-| 適用手順 | [docs/UPGRADE.md](docs/UPGRADE.md) |
-| 方針 | [docs/PRODUCT-STRATEGY.md](docs/PRODUCT-STRATEGY.md) |
+## Core 作業境界（エージェント・開発者向け）
 
-## リポジトリ構成（目標）
+**永続原則:** PukiWiki2026 Core のローカル作業ツリーは `D:\00_project\pukiwiki2026` ですが、**Plus 向け Cursor エージェントはそのパスへ一切書き込み・改変を行いません。**
 
-```
-PukiWiki2026-Plus/
-├── README.md
-├── CHANGELOG.md
-├── docs/                  ← Plus 向けドキュメント（正本）
-│   ├── PRODUCT-STRATEGY.md
-│   └── UPGRADE.md
-├── plus/                  ← Plus overlay ファイル（新規追加はここだけ）
-│   └── pukiwiki-plus/     ← 推奨: Core と物理分離
-├── upgrade/               ← overlay 適用スクリプト
-│   ├── apply.ps1
-│   └── apply.sh
-└── pukiwiki/              ← LEGACY（旧 fork 同梱。overlay へ移行予定・現時点では削除しない）
-```
+| パス | 役割 | Plus エージェント |
+|------|------|-------------------|
+| `D:\00_project\pukiwiki2026` | Core 参照ツリー（読み取り専用） | **改変禁止** |
+| `D:\00_project\pukiwiki2026 Plus` | Plus 直接開発ワークスペース | **ここだけで作業** |
 
-> **LEGACY `pukiwiki/`:** 初期コミット時の全ツリー同梱残骸です。新規開発では触らず、Plus 固有コードは `plus/` にのみ追加します。詳細は [docs/PRODUCT-STRATEGY.md](docs/PRODUCT-STRATEGY.md) §2.2。
-
-## クイックスタート
-
-1. **[PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026)** を Web サーバー（PHP 8.x 推奨）に設置し、稼働を確認する
-2. 本リポジトリを clone または release を取得する
-3. **[docs/UPGRADE.md](docs/UPGRADE.md)** の手順どおりバックアップ → overlay 適用
-
-## PukiWiki2026 との関係
-
-| リポジトリ | 役割 |
-|-----------|------|
-| [PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026) | Core — セキュリティ強化・LTS トラック |
-| **PukiWiki2026 Plus**（本リポ） | Plus — UX 拡張・メディア・実験機能の overlay パック |
-
-- Plus 未適用 = PukiWiki2026 Core のみ
-- Plus 適用後 = Core + Plus overlay
-
-PukiWiki2026 本体の設計・デプロイ・セキュリティは上流 [pukiwiki/docs](https://github.com/kuwa2005/PukiWiki2026/tree/main/pukiwiki/docs) を参照してください。
-
-## ドキュメント
-
-- [docs/UPGRADE.md](docs/UPGRADE.md) — インストール・バックアップ・overlay 適用の手順
-- [docs/PRODUCT-STRATEGY.md](docs/PRODUCT-STRATEGY.md) — プロダクト方針（日本語）
-- [CHANGELOG.md](CHANGELOG.md) — Plus 版の変更履歴
-- [plus/README.md](plus/README.md) — overlay ファイルの配置規則
-- [upgrade/README.md](upgrade/README.md) — 適用スクリプトの詳細
-
-## バージョン管理（ローカル Git）
-
-Plus は **PukiWiki2026 から独立したローカル Git リポジトリ** として管理します。Core 本体の改善は上流を参照し、Plus 固有の変更はこのリポジトリで commit します。
+- セキュリティ修正など Core 側が必要な変更は **handoff ドキュメント** で Core エージェント / [PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026) リポジトリへ委譲する。
+- 詳細: **[docs/CORE-BOUNDARY.md](docs/CORE-BOUNDARY.md)** · Cursor ルール: `.cursor/rules/pukiwiki2026-plus.mdc`
 
 | 項目 | 内容 |
 |------|------|
 | 作業フォルダ | `D:\00_project\pukiwiki2026 Plus` |
-| `origin`（Plus） | https://github.com/kuwa2005/PukiWiki2026-Plus.git |
-| `upstream`（Core 参照） | https://github.com/kuwa2005/PukiWiki2026.git |
+| 設置・アップデート | [docs/UPGRADE.md](docs/UPGRADE.md) |
+| 方針 | [docs/PRODUCT-STRATEGY.md](docs/PRODUCT-STRATEGY.md) |
 
-```powershell
-cd "D:\00_project\pukiwiki2026 Plus"
-git status
-# 変更後（意味のある単位でこまめに commit）
-git add …
-git commit -m "説明"
-# push は必要なときのみ（指示があるとき）
-git push origin main
-```
+## クイックスタート
 
-Core のセキュリティ修正等を取り込むときは `upstream` から fetch し、必要な差分だけ cherry-pick または merge してください（[pukiwiki/docs/PRODUCT-STRATEGY.md](pukiwiki/docs/PRODUCT-STRATEGY.md) 参照）。
+1. 本リポジトリを clone する
+2. Web サーバー（PHP 8.x 推奨）に配置
+3. `pukiwiki/pukiwiki.ini.php.example` を `pukiwiki/pukiwiki.ini.php` にコピーして設定
 
-`.env`・`pukiwiki/pukiwiki.ini.php`・`pukiwiki/wiki/`・`pukiwiki/cache/` 等は `.gitignore` で除外済みです。
+skin2026: [docs/SKIN2026.md](docs/SKIN2026.md)
 
-## ライセンス
+## ドキュメント
 
-GPL v2 または（あなたの選択で）それ以降の GPL（上流 PukiWiki / PukiWiki2026 に準拠）。
+- [docs/CORE-BOUNDARY.md](docs/CORE-BOUNDARY.md)
+- [docs/SKIN2026.md](docs/SKIN2026.md)
+- [docs/UPGRADE.md](docs/UPGRADE.md)
+- [docs/PRODUCT-STRATEGY.md](docs/PRODUCT-STRATEGY.md)
