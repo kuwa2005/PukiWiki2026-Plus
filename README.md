@@ -16,21 +16,24 @@ PukiWiki2026 Plus は PukiWiki2026 の Fork 版です。稼働中の PukiWiki202
 | 適用手順 | [docs/UPGRADE.md](docs/UPGRADE.md) |
 | 方針 | [docs/PRODUCT-STRATEGY.md](docs/PRODUCT-STRATEGY.md) |
 
-## リポジトリ構成
+## リポジトリ構成（目標）
 
 ```
 PukiWiki2026-Plus/
 ├── README.md
 ├── CHANGELOG.md
-├── docs/
+├── docs/                  ← Plus 向けドキュメント（正本）
 │   ├── PRODUCT-STRATEGY.md
 │   └── UPGRADE.md
-├── plus/                  ← Plus overlay ファイル
+├── plus/                  ← Plus overlay ファイル（新規追加はここだけ）
 │   └── pukiwiki-plus/     ← 推奨: Core と物理分離
-└── upgrade/               ← overlay 適用スクリプト
-    ├── apply.ps1
-    └── apply.sh
+├── upgrade/               ← overlay 適用スクリプト
+│   ├── apply.ps1
+│   └── apply.sh
+└── pukiwiki/              ← LEGACY（旧 fork 同梱。overlay へ移行予定・現時点では削除しない）
 ```
+
+> **LEGACY `pukiwiki/`:** 初期コミット時の全ツリー同梱残骸です。新規開発では触らず、Plus 固有コードは `plus/` にのみ追加します。詳細は [docs/PRODUCT-STRATEGY.md](docs/PRODUCT-STRATEGY.md) §2.2。
 
 ## クイックスタート
 
