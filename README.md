@@ -1,31 +1,62 @@
 # PukiWiki2026 Plus
 
-**[PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026) を Fork した改造版**（非公式）
+**[PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026) の Fork 版 — overlay を上書き適用する拡張パック**（非公式）
 
-PukiWiki 1.5.4 UTF-8 ベースの PukiWiki2026 を土台に、Plus 向けに構成を整理した派生プロジェクトです。本体のセキュリティ強化・編集 UX 等は上流 [PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026) を参照してください。
+PukiWiki2026 Plus は PukiWiki2026 の Fork 版です。稼働中の PukiWiki2026 インストールに **差分ファイル（overlay）を上書きコピー** すると Plus 相当の環境になります。本リポジトリは **PukiWiki2026 全ツリーを改変して同梱する fork ではありません**（overlay のみ管理）。
+
+| 原則 | 内容 |
+|------|------|
+| **Core は PukiWiki2026** | 本体の開発・セキュリティ保守は [PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026) のみ |
+| **Plus は overlay のみ** | 本リポジトリは **PukiWiki2026 コードベースを直接改変しない** — Plus 固有ファイル・適用スクリプト・Plus 向けドキュメントのみ |
+| **適用方式** | 既存インストールへ overlay を上書き（[docs/UPGRADE.md](docs/UPGRADE.md) 参照） |
 
 | 項目 | 内容 |
 |------|------|
-| ベース | [PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026) |
-| 作業フォルダ | `D:\00_project\pukiwiki2026 Plus` |
-| 方針 | [pukiwiki/docs/PRODUCT-STRATEGY.md](pukiwiki/docs/PRODUCT-STRATEGY.md) |
+| 前提 | [PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026) v1.x 以上を設置済み |
+| 適用手順 | [docs/UPGRADE.md](docs/UPGRADE.md) |
+| 方針 | [docs/PRODUCT-STRATEGY.md](docs/PRODUCT-STRATEGY.md) |
 
-## Plus での主な整理
+## リポジトリ構成
 
-- サンプル初期 wiki ページ・公式同梱ドキュメント／zip・開発用 tools・CI ワークフローをリポジトリから除外
-- プロダクト方針を `pukiwiki/docs/PRODUCT-STRATEGY.md` に集約
+```
+PukiWiki2026-Plus/
+├── README.md
+├── CHANGELOG.md
+├── docs/
+│   ├── PRODUCT-STRATEGY.md
+│   └── UPGRADE.md
+├── plus/                  ← Plus overlay ファイル
+│   └── pukiwiki-plus/     ← 推奨: Core と物理分離
+└── upgrade/               ← overlay 適用スクリプト
+    ├── apply.ps1
+    └── apply.sh
+```
 
 ## クイックスタート
 
-1. Web サーバー（PHP 8.x 推奨）で本リポジトリを公開する。
-2. `pukiwiki/pukiwiki.ini.php.example` から `pukiwiki/pukiwiki.ini.php` を用意して設定する。
-3. `pukiwiki/wiki/`・`pukiwiki/cache/` 等に書き込み権限を付与する。
-4. 詳細は上流の [pukiwiki/docs/SETUP.md](pukiwiki/docs/SETUP.md)・[pukiwiki/docs/DEPLOY.md](pukiwiki/docs/DEPLOY.md) を参照。
+1. **[PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026)** を Web サーバー（PHP 8.x 推奨）に設置し、稼働を確認する
+2. 本リポジトリを clone または release を取得する
+3. **[docs/UPGRADE.md](docs/UPGRADE.md)** の手順どおりバックアップ → overlay 適用
+
+## PukiWiki2026 との関係
+
+| リポジトリ | 役割 |
+|-----------|------|
+| [PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026) | Core — セキュリティ強化・LTS トラック |
+| **PukiWiki2026 Plus**（本リポ） | Plus — UX 拡張・メディア・実験機能の overlay パック |
+
+- Plus 未適用 = PukiWiki2026 Core のみ
+- Plus 適用後 = Core + Plus overlay
+
+PukiWiki2026 本体の設計・デプロイ・セキュリティは上流 [pukiwiki/docs](https://github.com/kuwa2005/PukiWiki2026/tree/main/pukiwiki/docs) を参照してください。
 
 ## ドキュメント
 
-- [CHANGELOG.md](CHANGELOG.md)
-- [pukiwiki/docs/](pukiwiki/docs/)（設計・デプロイ・編集 UX 等）
+- [docs/UPGRADE.md](docs/UPGRADE.md) — インストール・バックアップ・overlay 適用の手順
+- [docs/PRODUCT-STRATEGY.md](docs/PRODUCT-STRATEGY.md) — プロダクト方針（日本語）
+- [CHANGELOG.md](CHANGELOG.md) — Plus 版の変更履歴
+- [plus/README.md](plus/README.md) — overlay ファイルの配置規則
+- [upgrade/README.md](upgrade/README.md) — 適用スクリプトの詳細
 
 ## バージョン管理（ローカル Git）
 

@@ -2,23 +2,6 @@
 .env
 .env.*
 !.env.example
-pukiwiki/pukiwiki.ini.php
-
-# Wiki データ（本番・開発ともサーバー／環境ごと）
-pukiwiki/wiki/
-!pukiwiki/wiki/.htaccess
-!pukiwiki/wiki/index.html
-
-# ランタイム生成物
-pukiwiki/cache/*
-!pukiwiki/cache/.htaccess
-!pukiwiki/cache/index.html
-pukiwiki/backup/*
-!pukiwiki/backup/.htaccess
-!pukiwiki/backup/index.html
-pukiwiki/attach/*
-!pukiwiki/attach/.htaccess
-!pukiwiki/attach/index.html
 
 # OS / エディタ
 .DS_Store
@@ -37,3 +20,7 @@ composer.phar
 *.log
 tmp/
 temp/
+
+# ローカル検証用（PukiWiki2026 本体を clone してテストする場合）
+_local/
+test-install/
