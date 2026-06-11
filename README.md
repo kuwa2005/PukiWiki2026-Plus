@@ -1,95 +1,32 @@
-# pukiwiki2026
+# PukiWiki2026 Plus
 
-[![Release](https://img.shields.io/github/v/release/kuwa2005/PukiWiki2026?label=PukiWiki2026)](https://github.com/kuwa2005/PukiWiki2026/releases/tag/v1.0.1)
+**[PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026) を Fork した改造版**（非公式）
 
-**PukiWiki 1.5.4 UTF-8 ベース + PukiWiki2026 v1.0.1 セキュリティ強化 fork**（非公式）
-
-> PukiWiki2026 は公式 PukiWiki 1.5.4 UTF-8 をベースに、認証必須化・CSRF・スパム対策（Akismet/CAPTCHA 等）・セキュリティ監査対応を加えた非公式 fork です。  
-> 公式 PukiWiki Development Team の配布物ではありません。
+PukiWiki 1.5.4 UTF-8 ベースの PukiWiki2026 を土台に、Plus 向けに構成を整理した派生プロジェクトです。本体のセキュリティ強化・編集 UX 等は上流 [PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026) を参照してください。
 
 | 項目 | 内容 |
 |------|------|
-| バージョン | **PukiWiki2026 v1.0.1**（main には v1.0.1 以降の未リリース改善あり — [CHANGELOG.md](CHANGELOG.md) [Unreleased]） |
-| ベース | [PukiWiki](https://pukiwiki.osdn.jp/) **1.5.4 UTF-8** |
-| ライセンス | **GPL v2** または（あなたの選択で）それ以降の GPL（上流に準拠） |
-| リリース | [v1.0.1](https://github.com/kuwa2005/PukiWiki2026/releases/tag/v1.0.1) |
-| 作業フォルダ | `D:\00_project\pukiwiki2026` |
+| ベース | [PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026) |
+| 作業フォルダ | `D:\00_project\pukiwiki2026 Plus` |
+| 方針 | [pukiwiki/docs/PRODUCT-STRATEGY.md](pukiwiki/docs/PRODUCT-STRATEGY.md) |
 
-## ディレクトリ構成
+## Plus での主な整理
 
-```
-pukiwiki2026/                    ← git リポジトリ root
-├── index.php                    ← エントリ（DATA_HOME 定義）
-├── .htaccess, README.md, CHANGELOG.md
-├── .gitignore, .github/         … git / CI 用
-└── pukiwiki/                    ← ★ デプロイ / バックアップ対象
-    ├── lib/, plugin/, skin/, image/
-    ├── wiki/, cache/, backup/, attach/
-    ├── pukiwiki.ini.php         … 設定（git 除外）
-    ├── pukiwiki.ini.php.example
-    ├── docs/, tools/            … 開発用（バックアップに含む）
-    ├── README.txt, UPDATING.txt, COPYING.txt, INSTALL.txt  … 公式同梱
-    ├── *.en.txt.zip, wiki.en.zip            … 公式同梱（英語・初期 wiki）
-    └── …
-```
-
-**バックアップ:** `index.php` と `pukiwiki/` をコピーするだけで完了。詳細: [pukiwiki/docs/BACKUP.md](pukiwiki/docs/BACKUP.md)
-
-**`.htaccess`:** 同梱の `.htaccess` は**任意・推奨**（Apache で直接アクセス拒否に使える。無くても Wiki 本体は動作）。詳細: [pukiwiki/docs/DEPLOY.md §4.5](pukiwiki/docs/DEPLOY.md#45-htaccess任意推奨)
-
-**起動時パーミッションチェック:** Unix/Linux 本番で書き込みディレクトリの mode を起動時に確認・修正（不適切な場合のみ配下も再帰修正）。Windows 開発環境では自動スキップ。詳細: [pukiwiki/docs/DEPLOY.md §3.2](pukiwiki/docs/DEPLOY.md#32-パーミッション)
-
-公式との diff は git タグ **`upstream-1.5.4-utf8`** を基準に取ります（[pukiwiki/docs/UPSTREAM.md](pukiwiki/docs/UPSTREAM.md)）。ローカルに vendor コピーは不要です。
+- サンプル初期 wiki ページ・公式同梱ドキュメント／zip・開発用 tools・CI ワークフローをリポジトリから除外
+- プロダクト方針を `pukiwiki/docs/PRODUCT-STRATEGY.md` に集約
 
 ## クイックスタート
 
-1. Web サーバー（Apache / nginx + PHP 8.x 推奨）のドキュメントルート、または仮想ホストで本フォルダを公開する。
-2. `pukiwiki/pukiwiki.ini.php.example` を参考に `pukiwiki/pukiwiki.ini.php` を編集する（初回はコピー）。
-3. `pukiwiki/wiki/`・`pukiwiki/cache/`・`pukiwiki/backup/` 等に書き込み権限を付与する（Unix/Linux 本番では起動時パーミッションチェックが自動実行 — [pukiwiki/docs/DEPLOY.md §3.2](pukiwiki/docs/DEPLOY.md#32-パーミッション)）。
-4. ブラウザで `index.php` にアクセスし、初期ページが表示されることを確認する。
+1. Web サーバー（PHP 8.x 推奨）で本リポジトリを公開する。
+2. `pukiwiki/pukiwiki.ini.php.example` から `pukiwiki/pukiwiki.ini.php` を用意して設定する。
+3. `pukiwiki/wiki/`・`pukiwiki/cache/` 等に書き込み権限を付与する。
+4. 詳細は上流の [pukiwiki/docs/SETUP.md](pukiwiki/docs/SETUP.md)・[pukiwiki/docs/DEPLOY.md](pukiwiki/docs/DEPLOY.md) を参照。
 
-### 初回ログイン
+## ドキュメント
 
-| 項目 | 値 |
-|------|-----|
-| ユーザー名 | `editor` |
-| パスワード | `editor` |
+- [CHANGELOG.md](CHANGELOG.md)
+- [pukiwiki/docs/](pukiwiki/docs/)（設計・デプロイ・編集 UX 等）
 
-> **必ず変更して使うこと。** `editor` / `editor` はデモ用初期値です。初回ログイン時にパスワード変更画面が表示されます。本番・公開前にも必ずパスワードを変更してください。
+## ライセンス
 
-パスワード変更: 初回ログイン時の **強制変更 UI**（`?plugin=changepassword`）または **`pukiwiki/tools/gen-password-hash.php`**（Web）/ [pukiwiki/docs/SETUP.md](pukiwiki/docs/SETUP.md) の CLI 手順。
-
-詳細: [pukiwiki/docs/SETUP.md](pukiwiki/docs/SETUP.md) · [pukiwiki/docs/DEPLOY.md](pukiwiki/docs/DEPLOY.md)
-
-## 主な機能（v1.0.1 以降・main）
-
-- **編集認証・CSRF・スパム対策** — 匿名編集ブロック、Akismet / CAPTCHA / 外部リンク制限（任意有効化）
-- **凍結ページの comment / article** — 匿名投稿可（CAPTCHA・IP レート制限付き）
-- **編集画面 UX** — textarea ビューポート高さ、D&D / クリップボード貼り付けで添付と `#ref` 挿入、画像サイズプリセット（`small`〜`full`）と `popup`
-
-詳細: [CHANGELOG.md](CHANGELOG.md) [Unreleased] · [pukiwiki/docs/EDIT-DRAGDROP.md](pukiwiki/docs/EDIT-DRAGDROP.md) · [pukiwiki/docs/ANTI-SPAM.md](pukiwiki/docs/ANTI-SPAM.md)
-
-## 改造の進め方
-
-- 上流との差分方針: [pukiwiki/docs/UPSTREAM.md](pukiwiki/docs/UPSTREAM.md)
-- 設計メモ: [pukiwiki/docs/ARCHITECTURE.md](pukiwiki/docs/ARCHITECTURE.md)
-- **PukiWiki 1.5.4 スキン利用:** [pukiwiki/docs/PUKIWIKI154-SKIN.md](pukiwiki/docs/PUKIWIKI154-SKIN.md) — `SKIN_DIR` / `SKIN_FILE` のみ提供。サブディレクトリ skin では `SKIN_FILE` 必須。任意: [Apache rewrite で legacy `skin/` 吸収](pukiwiki/docs/PUKIWIKI154-SKIN.md#8-任意-apache-mod_rewrite-で-legacy-skin-パスを吸収)
-- 変更履歴: [CHANGELOG.md](CHANGELOG.md)
-
-## バージョン管理
-
-リポジトリ: **https://github.com/kuwa2005/PukiWiki2026**（ブランチ `main`、上流タグ `upstream-1.5.4-utf8`）
-
-```powershell
-cd D:\00_project\pukiwiki2026
-git pull origin main   # 作業前に同期
-# 変更後: git add … → git commit → git push origin main
-```
-
-`.env` や `pukiwiki/wiki/`・`pukiwiki/cache/` 等は `.gitignore` で除外済みです。
-
-## 参考リンク
-
-- 公式サイト: https://pukiwiki.osdn.jp/
-- 開発情報: https://pukiwiki.osdn.jp/dev/
-- 上流 README: [README.txt](pukiwiki/README.txt)
+GPL v2 または（あなたの選択で）それ以降の GPL（上流 PukiWiki / PukiWiki2026 に準拠）。
