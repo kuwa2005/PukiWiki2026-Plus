@@ -110,10 +110,7 @@ $attach_max_filesize = 2 * 1024 * 1024 * 1024;
 
 // Skins / Stylesheets
 define('SKIN_DIR', 'pukiwiki/skin/');
-// PukiWiki2026 Plus — skin2026:
-// define('SKIN_DIR', 'pukiwiki/skin2026/');
-// define('SKIN_FILE', DATA_HOME . 'skin2026/pukiwiki.skin.php');
-// 詳細: docs/SKIN2026.md
+// PukiWiki2026 Plus — 既定 skin は React シェル（dist/ 同梱）。詳細: docs/SKIN-REACT.md
 // サブディレクトリ skin（modernskin / bluebox 等）では SKIN_FILE も指定すること。
 // define('SKIN_DIR', 'pukiwiki/skin/modernskin/');
 // define('SKIN_FILE', DATA_HOME . 'skin/modernskin/pukiwiki.skin.php');

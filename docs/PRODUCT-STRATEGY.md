@@ -29,7 +29,7 @@
 | リポジトリ | semver | 役割 |
 |-----------|--------|------|
 | PukiWiki2026 | 1.x | セキュリティ・LTS |
-| PukiWiki2026 Plus | 2.x | UX・skin2026・実験 |
+| PukiWiki2026 Plus | 2.x | UX・React skin・実験 |
 
 差分専用フォルダ方式は廃止し、フルツリー上書きデプロイに統一。
 
@@ -55,8 +55,8 @@
 
 | 分類 | 配置 |
 |------|------|
-| skin2026 | `pukiwiki/skin2026/`（`skin/` は変更しない） |
-| UX JS | `skin2026/` 内 |
+| 既定 skin（React） | `pukiwiki/skin/`（`src/`・`dist/`・互換 JS） |
+| UX JS | `skin/` 内 |
 | oEmbed 等 | `pukiwiki/lib/`・`plugin/` |
 | セキュリティ | Core → handoff で Plus に取り込み |
 
@@ -69,7 +69,7 @@
 1. Core を本番に設置
 2. バックアップ
 3. Plus で手動上書き
-4. （任意）skin2026 有効化
+4. スキン・表示確認（既定 `pukiwiki/skin/`）
 
 ---
 

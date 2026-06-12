@@ -10,13 +10,13 @@ export default defineConfig({
     cssCodeSplit: false,
     lib: {
       entry: resolve(__dirname, 'src/main.jsx'),
-      name: 'Skin2026App',
+      name: 'SkinApp',
       formats: ['iife'],
-      fileName: () => 'skin2026-app.js',
+      fileName: () => 'skin-app.js',
     },
     rollupOptions: {
       output: {
-        assetFileNames: 'skin2026-app.[ext]',
+        assetFileNames: 'skin-app.[ext]',
         inlineDynamicImports: true,
       },
     },

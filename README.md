@@ -2,7 +2,7 @@
 
 **[PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026) の Fork 版 — 直接開発・上書きデプロイ**（非公式）
 
-PukiWiki2026 Plus は PukiWiki2026 をベースに UX 拡張（`skin2026/` 等）を同梱した **フルツリー** です。
+PukiWiki2026 Plus は PukiWiki2026 をベースに UX 拡張（`skin/` の React シェル等）を同梱した **フルツリー** です。
 
 ## デプロイアーキテクチャ（確定）
 
@@ -33,8 +33,7 @@ PukiWiki2026-Plus/
 └── pukiwiki/          ← コード正本（データディレクトリは git 外）
     ├── lib/
     ├── plugin/
-    ├── skin/          ← 標準（変更しない）
-    ├── skin2026/      ← Plus モダンスキン
+    ├── skin/          ← 既定スキン（React シェル + レガシー互換 JS/CSS）
     └── wiki/          ← .htaccess・index.html のみ
 ```
 
@@ -42,14 +41,14 @@ PukiWiki2026-Plus/
 
 1. clone して Web サーバー（PHP 8.x）に配置
 2. `pukiwiki/pukiwiki.ini.php.example` → `pukiwiki/pukiwiki.ini.php`
-3. [docs/SKIN2026.md](docs/SKIN2026.md) で skin2026 を必要に応じて有効化
+3. 既定 `SKIN_DIR` は `pukiwiki/skin/`（[docs/SKIN-REACT.md](docs/SKIN-REACT.md)）
 
 ## ドキュメント
 
 - [docs/UPGRADE.md](docs/UPGRADE.md) — Core 設置 → Plus 上書き
 - [docs/PRODUCT-STRATEGY.md](docs/PRODUCT-STRATEGY.md) — プロダクト方針
 - [docs/CORE-BOUNDARY.md](docs/CORE-BOUNDARY.md) — Core 境界・handoff
-- [docs/SKIN2026.md](docs/SKIN2026.md) — skin2026
+- [docs/SKIN-REACT.md](docs/SKIN-REACT.md) — 既定 React スキン
 - [CHANGELOG.md](CHANGELOG.md)
 
 ## Git

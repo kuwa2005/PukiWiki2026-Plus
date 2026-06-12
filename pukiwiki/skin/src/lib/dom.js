@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'pukiwiki-skin2026-theme'
+const STORAGE_KEY = 'pukiwiki-skin-theme'
 
 export function readTheme () {
   try {

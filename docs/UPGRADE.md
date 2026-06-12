@@ -43,7 +43,7 @@ cd PukiWiki2026-Plus && git pull
 
 ## 4. Plus で本番を上書きする
 
-**コピーする:** `index.php`、`.htaccess`、`pukiwiki/` のプログラム類（`skin2026/` 含む）。
+**コピーする:** `index.php`、`.htaccess`、`pukiwiki/` のプログラム類（`skin/dist/` 含む）。
 
 **本番で上書きしない:** `pukiwiki.ini.php`、`wiki/**`（ページデータ）、`attach/**`（実ファイル）、`cache/**`、`backup/**`、`diff/**`、`counter/**`（実データ）。
 
@@ -72,22 +72,23 @@ rsync -av \
 
 ---
 
-## 5. skin2026 を有効化する（任意）
+## 5. スキン設定（既定）
 
-本番の `pukiwiki/pukiwiki.ini.php` に追記（ini はコピーしない）:
+Plus の既定は React シェル付き `pukiwiki/skin/`。新規設置では `pukiwiki.ini.php.example` のとおり:
 
 ```php
-define('SKIN_DIR', 'pukiwiki/skin2026/');
-define('SKIN_FILE', DATA_HOME . 'skin2026/pukiwiki.skin.php');
+define('SKIN_DIR', 'pukiwiki/skin/');
 ```
 
-詳細: [SKIN2026.md](SKIN2026.md)
+詳細: [SKIN-REACT.md](SKIN-REACT.md)
+
+旧 `skin2026` を指定している本番は `pukiwiki/skin/` に戻す。
 
 ---
 
 ## 6. 確認
 
-OPcache クリア、表示・編集・添付を確認。skin2026 時は `pukiwiki/skin2026/pukiwiki.css` が **200** であること。
+OPcache クリア、表示・編集・添付を確認。`pukiwiki/skin/dist/skin-app.css` と `skin-app.js` が **200** であること。
 
 ---
 

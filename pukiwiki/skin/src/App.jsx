@@ -31,10 +31,10 @@ export default function App ({ config }) {
     adoptNode('attach', attachRef)
     adoptNode('footer', footerRef)
     adoptNode('toolbar', toolbarRef)
-    adoptNode('s26-page-title', titleRef)
-    adoptNode('s26-topicpath', topicpathRef)
+    adoptNode('skin-app-page-title', titleRef)
+    adoptNode('skin-app-topicpath', topicpathRef)
 
-    const ssr = document.getElementById('s26-ssr')
+    const ssr = document.getElementById('skin-app-ssr')
     if (ssr) ssr.remove()
   }, [])
 

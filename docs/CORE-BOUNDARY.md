@@ -1,6 +1,6 @@
 # CORE-BOUNDARY — PukiWiki2026 Core 作業境界
 
-**ステータス:** 永続原則（2026-06-12）  
+**ステータス:** 永続原則（2026-06-12 改訂）  
 **関連:** [README.md](../README.md) · [PRODUCT-STRATEGY.md](PRODUCT-STRATEGY.md) · [UPGRADE.md](UPGRADE.md)
 
 ---
@@ -20,9 +20,9 @@
 
 ## 2. してよいこと
 
-- Plus リポジトリ内の `pukiwiki/` 直接開発
+- Plus リポジトリ内の `pukiwiki/` 直接開発（`skin/`・`lib/`・`plugin/` 含む）
 - GitHub 上の Core ドキュメント・ローカル Core の **読み取り** 参照
-- `skin/` を参照し `skin2026/` で拡張
+- **データ互換優先:** wiki データ（`.txt`・添付）の互換を保つ範囲で Plus 内のプログラム改変を行う
 
 ---
 
@@ -30,7 +30,7 @@
 
 - `D:\00_project\pukiwiki2026\**` への write / patch / delete
 - Core リポジトリへの commit / push
-- `pukiwiki/skin/` の直接改変
+- 本番 wiki 実データのリポジトリコミット
 
 ---
 
@@ -47,24 +47,24 @@
 
 - [ ] 変更はすべて Plus リポジトリ配下か
 - [ ] `wiki/`・`cache/`・`attach/` 実データ・`pukiwiki.ini.php` をコミットしていないか
+- [ ] wiki データ互換に影響する変更は文書化したか
 - [ ] セキュリティ変更は handoff へ回したか
 
 ---
 
-## 6. skin2026 開発と本体改変の判断
+## 6. skin / 本体改変の判断
 
-`skin2026/` の UI 再設計（React シェル等）は **スキン配下のみ** を第一選択とする。
+Plus 既定 UI は `pukiwiki/skin/`（React シェル）。**スキン配下** を第一選択とする。
 
-本体（`lib/`・`plugin/`・`index.php` 等）の改変が必要と判明したら、**実装を止め**、次のいずれかをユーザーに提示して承認を得る。
+`lib/`・`plugin/`・`index.php` 等の改変は、**wiki データ（`.txt`・添付）互換を保つ** ことを条件に Plus 内で実施してよい。UX とデータ互換はプログラム互換より優先。
+
+Core ローカル（`D:\00_project\pukiwiki2026`）への変更が必要と判明した場合のみ handoff（§4）。
 
 | 選択肢 | 内容 |
 |--------|------|
-| **A: skin のみで回避** | `pukiwiki.skin.php`・ビルド成果物・skin 内 JS/CSS で対応。本体は触らない |
-| **B: Plus `pukiwiki/` を改変** | 本リポジトリの `pukiwiki/`（`skin2026/` 以外）をユーザー承認のうえ変更 |
-| **C: Core へ handoff** | `D:\00_project\pukiwiki2026` は触らず、`docs/handoff/` または Issue で Core エージェントへ依頼 |
-
-- エージェントは **黙って B や C を実行しない**。
-- 判断待ちの依存は `docs/SKIN2026.md` の「要ユーザー判断」に記録する。
+| **A: skin のみ** | `pukiwiki.skin.php`・ビルド成果物・skin 内 JS/CSS で対応 |
+| **B: Plus `pukiwiki/` 改変** | データ互換を保ちつつ本リポジトリの `pukiwiki/` を変更 |
+| **C: Core へ handoff** | `D:\00_project\pukiwiki2026` は触らず、`docs/handoff/` または Issue で依頼 |
 
 ---
 
@@ -75,3 +75,4 @@
 | 2026-06-12 | Plus エージェントは Core ローカルを永久に改変しない |
 | 2026-06-12 | 本番: Core 設置 → Plus 手動上書き。ユーザーデータはリポジトリから除外 |
 | 2026-06-12 | skin2026 は skin のみ優先。本体改変はユーザー承認後のみ（§6） |
+| 2026-06-12 | **方針転換:** React スキンを `skin/` に統合。データ互換優先で Plus 内 `lib/`・`plugin/` 改変可。Core ローカルは不変 |
