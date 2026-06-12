@@ -42,7 +42,7 @@ alwaysApply: true
 
 - Core の開発・セキュリティ修正は **PukiWiki2026 リポジトリ / Core エージェント** が担当する。
 
-- Plus 作業中に Core 修正が必要と判明した場合は、Core を触らず **`docs/handoff/`** または Issue で handoff ドキュメントを残す（形式は `docs/CORE-BOUNDARY.md` §4）。
+- Plus 作業中に Core 修正が必要と判明した場合は、Core を触らず **`pukiwiki/docs/handoff/`** または Issue で handoff ドキュメントを残す（形式は `pukiwiki/docs/CORE-BOUNDARY.md` §4）。
 
 
 
@@ -52,7 +52,7 @@ alwaysApply: true
 
 - `pukiwiki/` — 直接開発（既定 UI: `skin/` の React シェル）
 
-- `docs/` — Plus 向けドキュメント
+- `pukiwiki/docs/` — Plus 向けドキュメント
 
 - ルートの README.md、CHANGELOG.md 等
 
@@ -62,13 +62,13 @@ alwaysApply: true
 
 
 
-- **Core 境界（必読）:** `docs/CORE-BOUNDARY.md`
+- **Core 境界（必読）:** `pukiwiki/docs/CORE-BOUNDARY.md`
 
-- React スキン: `docs/SKIN-REACT.md`
+- React スキン: `pukiwiki/docs/SKIN-REACT.md`
 
-- プロダクト方針: `docs/PRODUCT-STRATEGY.md`
+- プロダクト方針: `pukiwiki/docs/PRODUCT-STRATEGY.md`
 
-- 適用手順: `docs/UPGRADE.md`
+- 適用手順: `pukiwiki/docs/UPGRADE.md`
 
 - Git 運用: README.md のローカル Git 節
 

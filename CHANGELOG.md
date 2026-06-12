@@ -5,6 +5,10 @@ Core の変更履歴は [PukiWiki2026/CHANGELOG.md](https://github.com/kuwa2005/
 
 ## [Unreleased]
 
+### Changed
+
+- **ドキュメント集約** — Plus 向け文書（CORE-BOUNDARY、PRODUCT-STRATEGY、SKIN-REACT、UPGRADE）を `pukiwiki/docs/` へ移動。root `docs/` はリダイレクト README のみ
+
 ### Fixed
 
 - **診断スクリプト 403** — `pukiwiki/.htaccess` の `RedirectMatch 403 ^/pukiwiki/tools` により旧 URL が拒否されていた。`diag-skin.php` を DocumentRoot 直下へ移動
@@ -15,7 +19,7 @@ Core の変更履歴は [PukiWiki2026/CHANGELOG.md](https://github.com/kuwa2005/
 
 ### Changed
 
-- **skin2026 → skin 統合** — React シェルを `pukiwiki/skin/` に移行。既定 `SKIN_DIR` は `pukiwiki/skin/`。`docs/SKIN-REACT.md` 追加
+- **skin2026 → skin 統合** — React シェルを `pukiwiki/skin/` に移行。既定 `SKIN_DIR` は `pukiwiki/skin/`。`pukiwiki/docs/SKIN-REACT.md` 追加
 - **CORE-BOUNDARY** — データ互換優先。Plus 内 `lib/`・`plugin/` 改変可（Core ローカルは不変）
 - **デプロイアーキテクチャ確定** — Core 設置（`/public_html/pukiwiki`）→ Plus 手動上書き。README・PRODUCT-STRATEGY・UPGRADE・CORE-BOUNDARY を改訂
 - **`.gitignore`** — `pukiwiki.ini.php`・`wiki/`・`cache/`・`attach/` 等を除外（上書きデプロイで本番データを保護）
@@ -24,7 +28,7 @@ Core の変更履歴は [PukiWiki2026/CHANGELOG.md](https://github.com/kuwa2005/
 ### Added
 
 - **`pukiwiki/` フルツリー** — Core ベース＋React `skin/`
-- **`docs/SKIN-REACT.md`** — 既定 React スキン手順
+- **`pukiwiki/docs/SKIN-REACT.md`** — 既定 React スキン手順
 - **`diag-skin.php`**（DocumentRoot 直下）— レンタルサーバー向けスキン診断（token 保護）。`pukiwiki/.htaccess` が `tools/` を 403 にするためルート配置
 - **`pukiwiki/lib/skin-diag.php`** — 診断本体（`diag-skin.php` から require）
 - **`pukiwiki/lib/skin-diag-log.php`** — `cache/.skin-diag-enabled` で `cache/skin-error.log` に Fatal を記録
@@ -33,7 +37,7 @@ Core の変更履歴は [PukiWiki2026/CHANGELOG.md](https://github.com/kuwa2005/
 ### Removed
 
 - **`pukiwiki/skin2026/`** — `skin/` に統合
-- **`docs/SKIN2026.md`** — `SKIN-REACT.md` に置換
+- **`docs/SKIN2026.md`** — `pukiwiki/docs/SKIN-REACT.md` に置換
 - **`plus/`**・**`upgrade/`** — overlay 方式の廃止
 
 ---
