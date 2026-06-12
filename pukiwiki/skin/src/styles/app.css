@@ -399,10 +399,6 @@ a.s26-sidebar-site-title:hover {
   padding: 0 var(--s26-main-gutter) 0;
 }
 
-.s26-topbar:not(:has(.s26-head-slot:not(:empty))) {
-  padding-top: 0.5rem;
-}
-
 .s26-topbar-row {
   display: flex;
   align-items: center;
@@ -465,15 +461,13 @@ a.s26-sidebar-site-title:hover {
   overflow: hidden;
 }
 
-.s26-toolbar-adopt-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+.s26-toolbar-adopt-only,
+.s26-toolbar-slot--hidden {
+  display: none;
   margin: 0;
   padding: 0;
   border: 0;
+  overflow: hidden;
 }
 
 .s26-toolbar-row {
@@ -492,6 +486,21 @@ a.s26-sidebar-site-title:hover {
   backdrop-filter: var(--s26-blur);
   box-shadow: var(--s26-shadow);
   box-sizing: border-box;
+}
+
+/* head 画像直下、またはデスクトップ（モバイル行なし）ではツールバー上余白なし */
+.s26-topbar:has(.s26-head-slot:not(:empty)) .s26-toolbar-row,
+.s26-app--desktop .s26-topbar:not(:has(.s26-head-slot:not(:empty))) .s26-toolbar-row {
+  margin-top: 0;
+}
+
+/* ツールバー非表示時は上方向の余白を確保しない */
+.s26-app--no-toolbars .s26-topbar {
+  padding-top: 0;
+}
+
+.s26-app--no-toolbars .s26-topbar:not(:has(.s26-head-slot:not(:empty))) :is(.s26-hero, .s26-topbar-util) {
+  margin-top: 0;
 }
 
 .s26-toolbar-slot {
@@ -604,10 +613,6 @@ a.s26-sidebar-site-title:hover {
 
 .s26-app--no-toolbars .s26-contents {
   padding-bottom: 1rem;
-}
-
-.s26-app--no-toolbars .s26-topbar:not(:has(.s26-head-slot:not(:empty))) {
-  padding-top: 1rem;
 }
 
 .s26-article-shell {

@@ -2,7 +2,7 @@ import Icon from './Icon.jsx'
 
 export default function ToolbarRow ({ showToolbars, toolbarRef, logoutHref, logoutLabel }) {
   if (!showToolbars) {
-    return <div ref={toolbarRef} className="s26-toolbar-adopt-only" aria-hidden="true" />
+    return <div ref={toolbarRef} className="s26-toolbar-adopt-only s26-toolbar-slot--hidden" aria-hidden="true" />
   }
 
   return (
