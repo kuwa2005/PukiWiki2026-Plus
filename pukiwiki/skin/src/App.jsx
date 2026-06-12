@@ -5,12 +5,21 @@ import MobileNav from './components/MobileNav.jsx'
 import Sidebar from './components/Sidebar.jsx'
 import TopBar from './components/TopBar.jsx'
 import { adoptNode, readTheme, writeTheme } from './lib/dom.js'
+import {
+  clampSidebarWidth,
+  readSidebarWidth,
+  SIDEBAR_DEFAULT,
+  SIDEBAR_MAX,
+  SIDEBAR_MIN,
+  writeSidebarWidth
+} from './lib/sidebarWidth.js'
 
 export default function App ({ config }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [isDesktop, setIsDesktop] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches
   )
+  const [sidebarWidth, setSidebarWidth] = useState(readSidebarWidth)
   const [paletteOpen, setPaletteOpen] = useState(false)
   const [theme, setTheme] = useState(readTheme)
 
@@ -23,6 +32,7 @@ export default function App ({ config }) {
   const toolbarRef = useRef(null)
   const titleRef = useRef(null)
   const topicpathRef = useRef(null)
+  const resizeRef = useRef({ active: false, startX: 0, startWidth: SIDEBAR_DEFAULT })
 
   useLayoutEffect(() => {
     adoptNode('menubar', menuRef)
@@ -53,6 +63,39 @@ export default function App ({ config }) {
     mq.addEventListener('change', onChange)
     return () => mq.removeEventListener('change', onChange)
   }, [])
+
+  const onResizeMove = useCallback((e) => {
+    if (!resizeRef.current.active) return
+    const delta = e.clientX - resizeRef.current.startX
+    setSidebarWidth(clampSidebarWidth(resizeRef.current.startWidth + delta))
+  }, [])
+
+  const onResizeEnd = useCallback(() => {
+    if (!resizeRef.current.active) return
+    resizeRef.current.active = false
+    document.body.classList.remove('s26-resizing')
+    document.removeEventListener('mousemove', onResizeMove)
+    document.removeEventListener('mouseup', onResizeEnd)
+    setSidebarWidth((w) => {
+      writeSidebarWidth(w)
+      return w
+    })
+  }, [onResizeMove])
+
+  const onResizeStart = useCallback((e) => {
+    if (!isDesktop || e.button !== 0) return
+    e.preventDefault()
+    resizeRef.current = { active: true, startX: e.clientX, startWidth: sidebarWidth }
+    document.body.classList.add('s26-resizing')
+    document.addEventListener('mousemove', onResizeMove)
+    document.addEventListener('mouseup', onResizeEnd)
+  }, [isDesktop, onResizeEnd, onResizeMove, sidebarWidth])
+
+  useEffect(() => () => {
+    document.removeEventListener('mousemove', onResizeMove)
+    document.removeEventListener('mouseup', onResizeEnd)
+    document.body.classList.remove('s26-resizing')
+  }, [onResizeEnd, onResizeMove])
 
   const toggleTheme = useCallback(() => {
     setTheme((t) => (t === 'dark' ? 'light' : 'dark'))
@@ -87,8 +130,16 @@ export default function App ({ config }) {
   const showFab = isLoggedIn && showToolbars && config.rw && config.isPage && config.isRead && editHref
   const sidebarVisible = isDesktop || sidebarOpen
 
+  const appStyle = isDesktop
+    ? { '--s26-sidebar-w': `${sidebarWidth}px` }
+    : undefined
+
   return (
-    <div className={`s26-app${showToolbars ? '' : ' s26-app--no-toolbars'}${isDesktop ? ' s26-app--desktop' : ''}`} data-theme={theme}>
+    <div
+      className={`s26-app${showToolbars ? '' : ' s26-app--no-toolbars'}${isDesktop ? ' s26-app--desktop' : ''}`}
+      data-theme={theme}
+      style={appStyle}
+    >
       <div className="s26-bg" aria-hidden="true">
         <div className="s26-bg-orb s26-bg-orb--1" />
         <div className="s26-bg-orb s26-bg-orb--2" />
@@ -99,9 +150,40 @@ export default function App ({ config }) {
         open={sidebarVisible}
         isDesktop={isDesktop}
         onToggle={() => setSidebarOpen((v) => !v)}
-        config={config}
         menuRef={menuRef}
       />
+
+      {isDesktop && (
+        <div
+          className="s26-sidebar-splitter"
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize sidebar"
+          aria-valuemin={SIDEBAR_MIN}
+          aria-valuemax={SIDEBAR_MAX}
+          aria-valuenow={sidebarWidth}
+          tabIndex={0}
+          onMouseDown={onResizeStart}
+          onKeyDown={(e) => {
+            if (e.key === 'ArrowLeft') {
+              e.preventDefault()
+              setSidebarWidth((w) => {
+                const next = clampSidebarWidth(w - 8)
+                writeSidebarWidth(next)
+                return next
+              })
+            }
+            if (e.key === 'ArrowRight') {
+              e.preventDefault()
+              setSidebarWidth((w) => {
+                const next = clampSidebarWidth(w + 8)
+                writeSidebarWidth(next)
+                return next
+              })
+            }
+          }}
+        />
+      )}
 
       <div className={`s26-main${sidebarVisible ? ' s26-main--sidebar-open' : ''}`}>
         <TopBar

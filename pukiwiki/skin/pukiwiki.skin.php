@@ -149,30 +149,12 @@ function skin_app_build_config(array $scope) {
 			if ($item) $site_items[] = $item;
 		}
 
-		$item = skin_app_nav_item('search', 'search');
-		if ($item) {
-			$nav[] = array(
-				'id'    => 'search',
-				'label' => '',
-				'items' => array($item),
-			);
-		}
-
 		if ($enable_logout && $site_items) {
 			$nav[] = array(
 				'id'    => 'site',
 				'label' => 'Site',
 				'items' => $site_items,
 			);
-		} elseif ($enable_login) {
-			$item = skin_app_nav_item('login', 'login');
-			if ($item) {
-				$nav[] = array(
-					'id'    => 'auth',
-					'label' => '',
-					'items' => array($item),
-				);
-			}
 		}
 	}
 
