@@ -135,7 +135,8 @@ function plugin_ref_body($args)
 		'_size_auto_aspect_ratio' => FALSE, // Size with auto aspect ratio
 		'_w'     => 0,       // 幅
 		'_h'     => 0,       // 高さ
-		'_%'     => 0,     // 拡大率
+		'_vw'    => 0,       // ビューポート幅に対する割合（%）
+		'_size_vw' => FALSE, // ビューポート幅指定あり
 		'_args'  => array(),
 		'_done'  => FALSE,
 		'_error' => ''
@@ -309,7 +310,8 @@ function plugin_ref_body($args)
 				$params['_h'] = $matches[2];
 
 			} else if (preg_match('/^([0-9.]+)%$/', $arg, $matches) && $matches[1] > 0) {
-				$params['_%'] = $matches[1];
+				$params['_size_vw'] = TRUE;
+				$params['_vw'] = $matches[1];
 			} else if (preg_match('/^([0-9]+)x$/', $arg, $matches)) {
 				$params['_size_auto_aspect_ratio'] = TRUE;
 				$params['_w'] = $matches[1];
@@ -353,11 +355,7 @@ function plugin_ref_body($args)
 				$height = $params['_h'] ? $params['_h'] : $height;
 			}
 		}
-		if ($params['_%']) {
-			$width  = (int)($width  * $params['_%'] / 100);
-			$height = (int)($height * $params['_%'] / 100);
-		}
-		if ($width && $height) $info = "width=\"$width\" height=\"$height\" ";
+		$info = ref_build_img_size_attrs($params, $width, $height);
 	}
 
 	// アラインメント判定
@@ -368,18 +366,8 @@ function plugin_ref_body($args)
 			break;
 		}
 	}
-	// Size with auto aspect ratio
-	if ($is_image) {
-		if ($params['_size_auto_aspect_ratio']) {
-			if ($params['_w']) {
-				$info = trim($info) . " style=\"width:" . $params['_w'] . "px;height:auto;\"";
-			} else if ($params['_h']) {
-				$info = trim($info) . " style=\"width:auto;height:" . $params['_h'] . "px;\"";
-			}
-		}
-	}
 	if ($is_image) { // 画像
-		$has_explicit_size = $params['_size'] || $params['_%'] ||
+		$has_explicit_size = $params['_size'] || $params['_size_vw'] ||
 			$params['_size_auto_aspect_ratio'];
 		$ref_class = ref_size_preset_class($params, $has_explicit_size);
 		$class_attr = $ref_class ? ' class="' . $ref_class . '"' : '';
@@ -401,6 +389,37 @@ function plugin_ref_body($args)
 	}
 
 	return $params;
+}
+
+// Build width/height attributes and inline CSS for explicit ref image sizes
+function ref_build_img_size_attrs($params, $width, $height)
+{
+	$info = '';
+	$styles = array();
+
+	if ($params['_size'] && $width && $height) {
+		$info = "width=\"$width\" height=\"$height\" ";
+	}
+	if ($params['_size_auto_aspect_ratio']) {
+		if ($params['_w']) {
+			$styles[] = 'width:' . (int)$params['_w'] . 'px';
+			$styles[] = 'height:auto';
+		} else if ($params['_h']) {
+			$styles[] = 'width:auto';
+			$styles[] = 'height:' . (int)$params['_h'] . 'px';
+		}
+		$styles[] = 'max-width:100%';
+	}
+	if ($params['_size_vw'] && $params['_vw'] > 0) {
+		$vw = rtrim(rtrim(sprintf('%.4F', (float)$params['_vw']), '0'), '.');
+		$styles[] = 'width:' . $vw . 'vw';
+		$styles[] = 'height:auto';
+		$styles[] = 'max-width:100%';
+	}
+	if (! empty($styles)) {
+		$info .= 'style="' . implode(';', $styles) . ';" ';
+	}
+	return $info;
 }
 
 // Return CSS class for responsive size preset (small|middle|big|full)

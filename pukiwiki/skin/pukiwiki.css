@@ -323,6 +323,11 @@ hr.full_hr, hr.note_hr {
 
 img.ref-full { max-width: none; width: auto; height: auto; }
 
+/* ref.inc.php — explicit px / vw sizes (inline style + responsive cap) */
+img.ref-small { max-width: 30%; height: auto; }
+img.ref-middle { max-width: 50%; height: auto; }
+img.ref-big { max-width: 75%; height: auto; }
+
 a.ref-popup-trigger { cursor: zoom-in; }
 
 .ref-popup-overlay {
