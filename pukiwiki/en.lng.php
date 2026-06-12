@@ -52,6 +52,7 @@ $_msg_more_results = 'Next $1 pages &gt;&gt;';
 $_msg_symbol      = 'Symbols';
 $_msg_other       = 'Others';
 $_msg_help        = 'View Text Formatting Rules';
+$_msg_plugin_manual = 'View Plugin Manual';
 $_msg_week        = array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
 $_msg_content_back_to_top = '<div class="jumpmenu"><a href="#navigator">&uarr;</a></div>';
 $_msg_word        = 'These search terms have been highlighted:';
@@ -88,6 +89,7 @@ $_msg_auth         = 'PukiWikiAuth';
 ///////////////////////////////////////
 // Page name
 $rule_page = 'FormattingRules';	// Formatting rules
+$plugin_manual_page = 'PukiWiki/1.4/Manual/Plugin';	// Plugin manual
 $help_page = 'Help';		// Help
 
 /////////////////////////////////////////////////

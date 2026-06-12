@@ -347,11 +347,11 @@ EOS;
 function edit_form($page, $postdata, $digest = FALSE, $b_template = TRUE)
 {
 	global $vars, $rows, $cols;
-	global $_btn_preview, $_btn_repreview, $_btn_update, $_btn_cancel, $_msg_help;
+	global $_btn_preview, $_btn_repreview, $_btn_update, $_btn_cancel, $_msg_help, $_msg_plugin_manual;
 	global $_btn_template, $_btn_load, $load_template_func;
 	global $notimeupdate;
 	global $_msg_edit_cancel_confirm, $_msg_edit_unloadbefore_message;
-	global $rule_page;
+	global $rule_page, $plugin_manual_page;
 
 	$script = get_base_uri();
 	// Newly generate $digest or not
@@ -459,7 +459,10 @@ EOD;
 
 	$body .= '<ul><li><a href="' .
 		get_page_uri($rule_page) .
-		'" target="_blank">' . $_msg_help . '</a></li></ul>';
+		'" target="_blank">' . $_msg_help . '</a></li>' .
+		'<li><a href="' .
+		get_page_uri($plugin_manual_page) .
+		'" target="_blank">' . $_msg_plugin_manual . '</a></li></ul>';
 	return $body;
 }
 

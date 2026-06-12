@@ -54,6 +54,7 @@ $_msg_more_results   = '次の $1 ページ &gt;&gt;';
 $_msg_symbol         = '記号';
 $_msg_other          = '日本語';
 $_msg_help           = 'テキスト整形のルールを表示する';
+$_msg_plugin_manual  = 'プラグインマニュアルを表示する';
 $_msg_week           = array('日','月','火','水','木','金','土');
 $_msg_content_back_to_top = '<div class="jumpmenu"><a href="#navigator">&uarr;</a></div>';
 $_msg_word           = 'これらのキーワードがハイライトされています：';
@@ -90,6 +91,7 @@ $_msg_auth         = 'PukiWikiAuth';
 ///////////////////////////////////////
 // Page name
 $rule_page = 'FormattingRules';	// Formatting rules
+$plugin_manual_page = 'PukiWiki/1.4/Manual/Plugin';	// Plugin manual
 $help_page = 'Help';		// Help
 
 /////////////////////////////////////////////////
