@@ -108,54 +108,6 @@ rsync -av \
   /path/to/PukiWiki2026-Plus/ user@host:/public_html/debugprint.com/pukiwiki/
 ```
 
-### FTP 自動デプロイ（WinSCP）
-
-レンタルサーバーで FTP/FTPS が使える場合、リポジトリ同梱のスクリプトで §4 の除外ルール付き同期ができます。
-
-**前提**
-
-- [WinSCP](https://winscp.net/) を Windows にインストール（`WinSCP.com` を使用）
-- 本番の `pukiwiki/pukiwiki.ini.php` は **READONLY**（パーミッション 444 等）のことが多い  
-  → 転送しようとすると **失敗** するため、スクリプトは **常に ini を同期対象外** にします（ローカルに `pukiwiki.ini.php` があってもアップロードしません）
-- `.env` に接続情報を書く（`.env.example` をコピー）
-
-**手順**
-
-```powershell
-cd "D:\00_project\pukiwiki2026 Plus"
-copy .env.example .env
-# .env を編集: FTP_HOST, FTP_USER, FTP_PASSWORD, FTP_REMOTE_DIR 等
-```
-
-**DryRun（転送予定のみ・推奨の初回確認）**
-
-```powershell
-.\scripts\deploy-ftp.ps1 -DryRun
-# または
-deploy-ftp.bat -DryRun
-```
-
-**本番反映**
-
-```powershell
-.\scripts\deploy-ftp.ps1
-# または
-deploy-ftp.bat
-```
-
-| 項目 | 内容 |
-|------|------|
-| 同期元 | リポジトリルート（`index.php`・`.htaccess`・`pukiwiki/`） |
-| 同期先 | `.env` の `FTP_REMOTE_DIR`（例: `public_html/debugprint.com/pukiwiki`） |
-| **転送しない** | `pukiwiki/pukiwiki.ini.php`（必須除外）・`wiki/*.txt`・`attach/`・`cache/`・`backup/`・`diff/`・`counter/`・`.env`・`.git`・`node_modules`・`pukiwiki/skin/src/` 等 |
-| **転送する** | `pukiwiki/skin/dist/`（ビルド済み JS/CSS）・`lib/`・`plugin/`・`skin/pukiwiki.skin.php` 等 |
-
-`.env` の `FTP_EXCLUDE_INI=1`（既定）は「ini を上書きしない」方針の明示用です。`0` にしてもスクリプトは ini を転送しません。
-
-WinSCP 未導入時はエラー終了します。**WinSCP のインストールを推奨**します。
-
-反映後は §6（OPcache・HTTP 200 確認）を実行してください。
-
 ### HTTP 500 が出るとき（debugprint.com で確認済みのパターン）
 
 | 症状 | 原因 | 対処 |
@@ -250,8 +202,6 @@ define('SKIN_DIR', 'pukiwiki/skin/');
 ```
 
 詳細: [SKIN-REACT.md](SKIN-REACT.md)
-
-**React スキン UI（Plus）:** 左サイドバーは MENU プラグイン（Hot! / PickUp 等）のみ表示。検索・ログイン・ブランド見出しはサイドバーから除去。デスクトップではサイドバー幅をドラッグで 200〜400px に調整でき、`localStorage`（`pukiwiki-skin-sidebar-width`）に保存される。反映には `pukiwiki/skin/` で `npm run build` 後、`skin/dist/` を本番へ同期すること。
 
 **既存本番:** 旧 ini で `skin2026` を指定している場合は、**ini ファイル全体を開発環境から上書きせず**、サーバー上の `pukiwiki.ini.php` を編集して `SKIN_DIR` を `pukiwiki/skin/` に変更する。
 
