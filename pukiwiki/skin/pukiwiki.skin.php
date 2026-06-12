@@ -319,15 +319,15 @@ $_IMAGE['skin']['rss']      = 'rss.png';
    <?php } ?>
   <?php } ?>
   <?php skin_app_toolbar_hidden('diff') ?>
-  <?php if ($do_backup) { skin_app_toolbar_hidden('backup') } ?>
+  <?php if ($do_backup) { skin_app_toolbar_hidden('backup'); } ?>
   <?php if ($rw) { ?>
-   <?php if ((bool)ini_get('file_uploads')) { skin_app_toolbar_hidden('upload') } ?>
+   <?php if ((bool)ini_get('file_uploads')) { skin_app_toolbar_hidden('upload'); } ?>
    <?php skin_app_toolbar_hidden('copy') ?>
    <?php skin_app_toolbar_hidden('rename') ?>
   <?php } ?>
   <?php skin_app_toolbar_hidden('reload') ?>
 <?php } ?>
-  <?php if ($rw) { skin_app_toolbar_hidden('new') } ?>
+  <?php if ($rw) { skin_app_toolbar_hidden('new'); } ?>
   <?php skin_app_toolbar_hidden('list') ?>
   <?php skin_app_toolbar_hidden('search') ?>
   <?php skin_app_toolbar_hidden('recent') ?>

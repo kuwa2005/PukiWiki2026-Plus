@@ -18,10 +18,6 @@ if (! defined('PKWK_DIAG_DELETE_HINT')) {
 if (! defined('PKWK_DEBUG')) {
 	define('PKWK_DEBUG', 1);
 }
-if (! defined('MUTIME')) {
-	define('MUTIME', microtime(true));
-}
-
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 

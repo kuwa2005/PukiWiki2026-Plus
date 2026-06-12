@@ -117,6 +117,7 @@ rsync -av \
 | 本番 ini に `skin2026` が残っている | 統合後 `skin2026/` は存在しない | **ini 全体を上書きせず** `SKIN_DIR` を `pukiwiki/skin/` に変更（§5）。`d9b1e97` 以降はコード側フォールバックあり |
 | `skin.php` だけ更新し `func.php` を古いまま | `pkwk_effective_skin_dir()` 未定義で Fatal | `skin.php`・`html.php`・`func.php` をセットで上書き |
 | 本番 ini が古く `$http_response_custom_headers` 未定義 | `pkwk_common_headers()` の `foreach` が PHP 8 TypeError → 500（本文 0 バイト） | `pukiwiki/lib/init.php`・`html.php` を最新 Plus で上書き（コード側で空配列フォールバック） |
+| 診断で `syntax error, unexpected token "}"` in `pukiwiki.skin.php`（322 行付近） | ワンライン `if` 内の `skin_app_toolbar_hidden()` 呼び出し末尾に `;` がない（PHP 8 Parse error） | 最新の `pukiwiki/skin/pukiwiki.skin.php` を上書き → OPcache クリア（§6） |
 
 ### レンタルサーバー向けトラブルシュート（PHP エラーログなし）
 
@@ -156,6 +157,7 @@ rsync -av \
 2. ブラウザで開く:  
    `https://debugprint.com/diag-skin.php?token=plus-skin-diag-2026`
 3. 表の **NG** 行が原因候補（例: `function pkwk_effective_skin_dir` → `func.php` 未反映、`$http_response_custom_headers is array` → `init.php` 未反映、`full skin require() render` → スキン描画の Fatal）
+| 診断で `syntax error, unexpected token "}"` in `pukiwiki.skin.php`（322 行付近） | ワンライン `if` 内の `skin_app_toolbar_hidden()` 呼び出し末尾に `;` がない（PHP 8 Parse error） | 最新の `pukiwiki/skin/pukiwiki.skin.php` を上書き → OPcache クリア（§6） |
 4. 修正・再デプロイ後、**`diag-skin.php` をサーバーから削除**（`skin-diag.php` は残しても動作に影響しませんが、不要なら削除可）
 
 #### 4. キャッシュログ（`skin-error.log`）
