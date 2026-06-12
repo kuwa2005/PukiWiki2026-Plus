@@ -7,7 +7,7 @@
 
 define('PLUGIN_HEAD_USAGE', '#head([pagename/]attach-filename[,height])');
 define('PLUGIN_HEAD_MAX_HEIGHT', 2000);
-define('PLUGIN_HEAD_HEIGHT_PRESETS', 'small:120,medium:180,default:180,large:300');
+define('PLUGIN_HEAD_HEIGHT_PRESETS', 'small:120,medium:180,default:180,large:320');
 // Suffix check aligned with #ref (PLUGIN_REF_IMAGE) plus .webp
 define('PLUGIN_HEAD_IMAGE_SUFFIX', '/\.(?:gif|png|jpe?g|webp)$/i');
 
