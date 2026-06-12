@@ -18,11 +18,13 @@
 | 項目 | パス |
 |------|------|
 | ローカル Plus | `D:\00_project\pukiwiki2026 Plus` |
-| 本番 DocumentRoot | `/public_html/debugprint.com/`（`index.php` の位置） |
-| 本番 DATA_HOME | `/public_html/debugprint.com/pukiwiki/` |
+| 本番デプロイ先（DocumentRoot） | `/public_html/debugprint.com/pukiwiki/` |
+| 本番 DATA_HOME | `/public_html/debugprint.com/pukiwiki/pukiwiki/` |
 | 公開 URL | https://debugprint.com/ |
 
-`index.php` は DocumentRoot 直下、`pukiwiki/` はその子ディレクトリ（`DATA_HOME`）です。リポジトリをサーバーへコピーするときは **DocumentRoot へ `index.php` と `.htaccess`、子に `pukiwiki/`** という構成を維持してください。
+Plus リポジトリ全体（`index.php`・`.htaccess`・`pukiwiki/`）を **`/public_html/debugprint.com/pukiwiki/`** へフル上書きする。`/public_html/pukiwiki` ではない。
+
+Apache の vhost DocumentRoot も上記デプロイ先（`…/debugprint.com/pukiwiki/`）を指すこと。`index.php` の `DATA_HOME` は `__DIR__ . '/pukiwiki/'` のため、配置後は `…/pukiwiki/pukiwiki/` が wiki 本体になる。Web 上の静的パス `pukiwiki/skin/dist/`（例: https://debugprint.com/pukiwiki/skin/dist/skin-app.js）はこの構成で正しい。
 
 旧 Core 設置先を Plus で **フル上書き** する想定。Plus リポジトリには `wiki/`・`attach/`・`cache/` 実データと `pukiwiki.ini.php` を含めません（`.gitignore`）。除外付きコピーなら本番のユーザーデータは消えません。
 
@@ -87,7 +89,7 @@ cd PukiWiki2026-Plus && git pull
 
 ```powershell
 $Source = "D:\00_project\pukiwiki2026 Plus"
-$Target = "\\server\public_html\debugprint.com"   # DocumentRoot（index.php の置き場）
+$Target = "\\server\public_html\debugprint.com\pukiwiki"   # DocumentRoot（index.php の置き場）
 
 Copy-Item "$Source\index.php","$Source\.htaccess" $Target -Force
 $skip = @('wiki','attach','cache','backup','diff','counter','pukiwiki.ini.php')
@@ -103,16 +105,17 @@ rsync -av \
   --exclude 'pukiwiki/cache/' --exclude 'pukiwiki/backup/' \
   --exclude 'pukiwiki/diff/' --exclude 'pukiwiki/counter/' \
   --exclude 'pukiwiki/pukiwiki.ini.php' \
-  /path/to/PukiWiki2026-Plus/ user@host:/public_html/debugprint.com/
+  /path/to/PukiWiki2026-Plus/ user@host:/public_html/debugprint.com/pukiwiki/
 ```
 
 ### HTTP 500 が出るとき（debugprint.com で確認済みのパターン）
 
 | 症状 | 原因 | 対処 |
 |------|------|------|
-| `?cmd=rss` は **200**、トップ・閲覧は **500**（本文 0 バイト） | React スキン `skin_app_build_config()` が PHP 8 で `catbody()` ローカル変数を `global` 参照していた（`391fdce` 以前） | `pukiwiki/skin/pukiwiki.skin.php` と `pukiwiki/lib/html.php`・`func.php` を最新 Plus で上書き（§4） |
-| CSS は 200 だがページ 500 | 上記と同じ（静的ファイルは到達、PHP スキン描画のみ失敗） | 同上 |
-| 本番 ini に `skin2026` が残っている | 統合後 `skin2026/` は存在しない | **ini 全体を上書きせず** `SKIN_DIR` を `pukiwiki/skin/` に変更（§5）。コード側でも `skin2026` 参照はフォールバックあり |
+| `?cmd=rss` は **200**、トップ・閲覧は **500**（本文 0 バイト） | React スキン `skin_app_build_config()` が PHP 8 で `catbody()` ローカル変数を `global` 参照していた（`d9b1e97` 以前） | `pukiwiki/skin/pukiwiki.skin.php` と `pukiwiki/lib/html.php`・`func.php` を **`d9b1e97` 以降** の Plus で上書き（§4）→ OPcache クリア（§6） |
+| CSS/JS は 200 だがページ 500 | 上記と同じ（静的ファイルは到達、PHP スキン描画のみ失敗）。`skin-app.js` の更新日時が古いままならコード未反映 | 同上 |
+| 本番 ini に `skin2026` が残っている | 統合後 `skin2026/` は存在しない | **ini 全体を上書きせず** `SKIN_DIR` を `pukiwiki/skin/` に変更（§5）。`d9b1e97` 以降はコード側フォールバックあり |
+| `skin.php` だけ更新し `func.php` を古いまま | `pkwk_effective_skin_dir()` 未定義で Fatal | `skin.php`・`html.php`・`func.php` をセットで上書き |
 
 ---
 
