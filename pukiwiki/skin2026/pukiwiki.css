@@ -1,424 +1,112 @@
 @charset "UTF-8";
 
 /*!
- * PukiWiki2026 Plus — skin2026
- * Modern 2026 skin for PukiWiki / PukiWiki2026
- * License: GPL v2 or (at your option) any later version
+ * PukiWiki2026 Plus — skin2026 wiki content styles
+ * React shell styles: dist/skin2026-app.css
  */
 
-/* --- Design tokens --- */
 :root,
 html[data-theme="light"] {
-  --s26-bg: #f6f7f9;
+  --s26-link: #6366f1;
+  --s26-link-visited: #8b5cf6;
+  --s26-accent: #6366f1;
+  --s26-accent-hover: #4f46e5;
+  --s26-accent-soft: rgba(99, 102, 241, 0.12);
+  --s26-text: #0f172a;
+  --s26-text-muted: #64748b;
+  --s26-border: rgba(15, 23, 42, 0.1);
   --s26-surface: #ffffff;
   --s26-surface-elevated: #ffffff;
-  --s26-text: #1a1d21;
-  --s26-text-muted: #5c6370;
-  --s26-border: #e2e5eb;
-  --s26-accent: #2563eb;
-  --s26-accent-hover: #1d4ed8;
-  --s26-accent-soft: #eff6ff;
-  --s26-link: #2563eb;
-  --s26-link-visited: #7c3aed;
-  --s26-shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 4px 16px rgba(15, 23, 42, 0.04);
-  --s26-radius: 12px;
-  --s26-radius-sm: 8px;
-  --s26-header-bg: rgba(255, 255, 255, 0.92);
   --s26-code-bg: #f1f5f9;
   --s26-pre-bg: #f8fafc;
-  --s26-heading-bg: #eef2ff;
-  --s26-focus: #2563eb;
-  --s26-max-width: 1200px;
-  --s26-content-width: 72ch;
+  --s26-heading-bg: rgba(99, 102, 241, 0.08);
+  --s26-focus: #6366f1;
+  --s26-radius-sm: 10px;
 }
 
 html[data-theme="dark"] {
-  --s26-bg: #0f1117;
-  --s26-surface: #171a22;
-  --s26-surface-elevated: #1e222d;
-  --s26-text: #e8eaed;
-  --s26-text-muted: #9aa0ab;
-  --s26-border: #2d3340;
-  --s26-accent: #60a5fa;
-  --s26-accent-hover: #93c5fd;
-  --s26-accent-soft: #1e293b;
-  --s26-link: #60a5fa;
+  --s26-link: #818cf8;
   --s26-link-visited: #c4b5fd;
-  --s26-shadow: 0 1px 3px rgba(0, 0, 0, 0.35), 0 4px 16px rgba(0, 0, 0, 0.25);
-  --s26-header-bg: rgba(23, 26, 34, 0.94);
+  --s26-accent: #818cf8;
+  --s26-accent-hover: #a5b4fc;
+  --s26-accent-soft: rgba(129, 140, 248, 0.14);
+  --s26-text: #eef2ff;
+  --s26-text-muted: #94a3b8;
+  --s26-border: rgba(255, 255, 255, 0.1);
+  --s26-surface: #161b26;
+  --s26-surface-elevated: #1e222d;
   --s26-code-bg: #1e222d;
-  --s26-pre-bg: #151820;
-  --s26-heading-bg: #1e293b;
-  --s26-focus: #60a5fa;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --s26-bg: #0f1117;
-    --s26-surface: #171a22;
-    --s26-surface-elevated: #1e222d;
-    --s26-text: #e8eaed;
-    --s26-text-muted: #9aa0ab;
-    --s26-border: #2d3340;
-    --s26-accent: #60a5fa;
-    --s26-accent-hover: #93c5fd;
-    --s26-accent-soft: #1e293b;
-    --s26-link: #60a5fa;
-    --s26-link-visited: #c4b5fd;
-    --s26-shadow: 0 1px 3px rgba(0, 0, 0, 0.35), 0 4px 16px rgba(0, 0, 0, 0.25);
-    --s26-header-bg: rgba(23, 26, 34, 0.94);
-    --s26-code-bg: #1e222d;
-    --s26-pre-bg: #151820;
-    --s26-heading-bg: #1e293b;
-    --s26-focus: #60a5fa;
-  }
-}
-
-/* --- Base --- */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
+  --s26-pre-bg: #12161f;
+  --s26-heading-bg: rgba(129, 140, 248, 0.12);
+  --s26-focus: #818cf8;
 }
 
 body.skin2026 {
   margin: 0;
-  min-height: 100vh;
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans JP", "Hiragino Sans", sans-serif;
   font-size: 1rem;
-  line-height: 1.65;
+  line-height: 1.7;
   color: var(--s26-text);
-  background: var(--s26-bg);
   -webkit-font-smoothing: antialiased;
 }
 
 body.skin2026 a {
   color: var(--s26-link);
   text-decoration: none;
-  transition: color 0.15s ease;
 }
 
-body.skin2026 a:visited {
-  color: var(--s26-link-visited);
-}
+body.skin2026 a:visited { color: var(--s26-link-visited); }
+body.skin2026 a:hover { color: var(--s26-accent-hover); text-decoration: underline; }
+body.skin2026 a:focus-visible { outline: 2px solid var(--s26-focus); outline-offset: 2px; }
+body.skin2026 img { max-width: 100%; height: auto; border: none; vertical-align: middle; }
+body.skin2026 hr { border: none; border-top: 1px solid var(--s26-border); margin: 1.5rem 0; }
 
-body.skin2026 a:hover {
-  color: var(--s26-accent-hover);
-  text-decoration: underline;
-}
-
-body.skin2026 a:focus-visible,
-body.skin2026 button:focus-visible {
-  outline: 2px solid var(--s26-focus);
-  outline-offset: 2px;
-}
-
-body.skin2026 img {
-  max-width: 100%;
-  height: auto;
-  border: none;
-  vertical-align: middle;
-}
-
-body.skin2026 hr {
-  border: none;
-  border-top: 1px solid var(--s26-border);
-  margin: 1.5rem 0;
-}
-
-/* --- Header --- */
-.skin2026-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--s26-header-bg);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--s26-border);
-  box-shadow: var(--s26-shadow);
-}
-
-.skin2026-header-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  max-width: var(--s26-max-width);
+/* Article prose (#body from PukiWiki) */
+.s26-article-card #body {
+  padding: clamp(1.25rem, 3vw, 2rem) clamp(1.25rem, 4vw, 2.5rem);
+  max-width: 72ch;
   margin: 0 auto;
-  padding: 0.75rem 1.25rem;
-}
-
-.skin2026-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  color: var(--s26-text);
-  text-decoration: none;
-  min-width: 0;
-}
-
-.skin2026-brand:hover {
-  text-decoration: none;
-  color: var(--s26-text);
-}
-
-.skin2026-logo {
-  flex-shrink: 0;
-  border-radius: var(--s26-radius-sm);
-}
-
-.skin2026-site-title {
-  font-weight: 600;
-  font-size: 1.05rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.skin2026-header-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-shrink: 0;
-}
-
-.skin2026-theme-toggle,
-.skin2026-nav-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  padding: 0;
-  border: 1px solid var(--s26-border);
-  border-radius: var(--s26-radius-sm);
-  background: var(--s26-surface);
-  color: var(--s26-text);
-  cursor: pointer;
-  font-size: 1.1rem;
-  line-height: 1;
-}
-
-.skin2026-nav-toggle {
-  flex-direction: column;
-  gap: 4px;
-}
-
-.skin2026-nav-toggle-bar {
-  display: block;
-  width: 18px;
-  height: 2px;
-  background: var(--s26-text);
-  border-radius: 1px;
-}
-
-.skin2026-page-meta {
-  max-width: var(--s26-max-width);
-  margin: 0 auto;
-  padding: 0 1.25rem 1rem;
-}
-
-.skin2026-page-title {
-  margin: 0;
-  font-size: clamp(1.5rem, 4vw, 2rem);
-  font-weight: 700;
-  line-height: 1.25;
-  word-break: break-word;
-}
-
-.skin2026-canonical,
-.skin2026-topicpath {
-  display: block;
-  margin-top: 0.35rem;
-  font-size: 0.85rem;
-  color: var(--s26-text-muted);
-}
-
-/* --- Navigation --- */
-.skin2026-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.25rem;
-  max-width: var(--s26-max-width);
-  margin: 0 auto;
-  padding: 0.75rem 1.25rem 1rem;
-  border-bottom: 1px solid var(--s26-border);
-  background: var(--s26-surface);
-}
-
-.skin2026-nav-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 0.75rem;
-  align-items: center;
-}
-
-.skin2026-nav-group:not(:last-child)::after {
-  content: "";
-  display: none;
-}
-
-.skin2026-nav-link {
-  display: inline-block;
-  padding: 0.35rem 0.65rem;
-  border-radius: 999px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--s26-text);
-  background: var(--s26-accent-soft);
-}
-
-.skin2026-nav-link:hover {
-  background: var(--s26-accent);
-  color: #fff;
-  text-decoration: none;
-}
-
-@media (max-width: 768px) {
-  .skin2026-nav {
-    display: none;
-    flex-direction: column;
-    align-items: stretch;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 100%;
-    z-index: 99;
-    box-shadow: var(--s26-shadow);
-    max-height: calc(100vh - 4rem);
-    overflow-y: auto;
-  }
-
-  .skin2026-nav.is-open {
-    display: flex;
-  }
-
-  .skin2026-nav-group {
-    flex-direction: column;
-    align-items: stretch;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--s26-border);
-  }
-
-  .skin2026-nav-group:last-child {
-    border-bottom: none;
-  }
-
-  .skin2026-nav-link {
-    border-radius: var(--s26-radius-sm);
-  }
-}
-
-/* --- Main layout --- */
-.skin2026-main {
-  max-width: var(--s26-max-width);
-  margin: 0 auto;
-  padding: 1.5rem 1.25rem 2rem;
-}
-
-.skin2026-contents {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
   word-break: break-word;
   overflow-wrap: break-word;
 }
 
-@media (min-width: 900px) {
-  .skin2026-contents:has(.skin2026-sidebar--left):has(.skin2026-sidebar--right) {
-    grid-template-columns: 14rem 1fr 16rem;
-  }
-
-  .skin2026-contents:has(.skin2026-sidebar--left):not(:has(.skin2026-sidebar--right)) {
-    grid-template-columns: 14rem 1fr;
-  }
-
-  .skin2026-contents:has(.skin2026-sidebar--right):not(:has(.skin2026-sidebar--left)) {
-    grid-template-columns: 1fr 16rem;
-  }
-}
-
-.skin2026-body {
-  background: var(--s26-surface);
-  border: 1px solid var(--s26-border);
-  border-radius: var(--s26-radius);
-  box-shadow: var(--s26-shadow);
-  padding: 1.5rem 1.75rem;
-  max-width: 100%;
-}
-
-.skin2026-sidebar {
-  font-size: 0.9rem;
-  background: var(--s26-surface);
-  border: 1px solid var(--s26-border);
-  border-radius: var(--s26-radius);
-  padding: 1rem;
-  box-shadow: var(--s26-shadow);
-}
-
-.skin2026-sidebar ul {
-  margin: 0.25rem 0 0.25rem 1rem;
-  padding: 0;
-}
-
-.skin2026-sidebar h4 {
-  margin: 0.75rem 0 0.35rem;
-  font-size: 0.95rem;
-}
-
-.skin2026-note,
-.skin2026-attach {
-  margin-top: 1.5rem;
-  padding: 1rem 1.25rem;
-  background: var(--s26-surface);
-  border: 1px solid var(--s26-border);
-  border-radius: var(--s26-radius);
-}
-
-/* --- Typography (wiki content) --- */
-.skin2026-body h1,
-.skin2026-body h2,
-.skin2026-body h3,
-.skin2026-body h4,
-.skin2026-body h5,
-.skin2026-body h6 {
+#body h1, #body h2, #body h3, #body h4, #body h5, #body h6 {
   color: var(--s26-text);
   line-height: 1.35;
 }
 
-.skin2026-body h1,
-.skin2026-body h2 {
+#body h1, #body h2 {
   background: var(--s26-heading-bg);
-  padding: 0.5em 0.75em;
+  padding: 0.55em 0.85em;
   border-radius: var(--s26-radius-sm);
-  margin: 1.25em 0 0.65em;
-  border: none;
+  margin: 1.35em 0 0.7em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
-.skin2026-body h3 {
+#body h3 {
   border-left: 4px solid var(--s26-accent);
   padding: 0.35em 0 0.35em 0.75em;
-  margin: 1.1em 0 0.5em;
+  margin: 1.15em 0 0.55em;
 }
 
-.skin2026-body h4 {
+#body h4 {
   border-left: 3px solid var(--s26-border);
   padding-left: 0.65em;
   margin: 1em 0 0.45em;
 }
 
-.skin2026-body h5,
-.skin2026-body h6 {
+#body h5, #body h6 {
   background: var(--s26-heading-bg);
   padding: 0.35em 0.6em;
   border-radius: var(--s26-radius-sm);
   margin: 0.9em 0 0.4em;
 }
 
-.skin2026-body pre {
+#body p { margin: 0.85em 0; }
+#body li { margin: 0.25em 0; }
+
+#body pre {
   background: var(--s26-pre-bg);
   border: 1px solid var(--s26-border);
   border-radius: var(--s26-radius-sm);
@@ -429,16 +117,26 @@ body.skin2026 hr {
   font-size: 0.9em;
 }
 
-.skin2026-body blockquote {
-  margin: 1em 0 1em 1.25em;
-  padding: 0.5em 1em;
+#body code {
+  background: var(--s26-code-bg);
+  padding: 0.12em 0.35em;
+  border-radius: 6px;
+  font-size: 0.9em;
+}
+
+#body blockquote {
+  margin: 1em 0;
+  padding: 0.75em 1em;
   border-left: 4px solid var(--s26-accent);
   color: var(--s26-text-muted);
   background: var(--s26-accent-soft);
   border-radius: 0 var(--s26-radius-sm) var(--s26-radius-sm) 0;
 }
 
-.skin2026-body textarea {
+#body textarea,
+#body select,
+.edit_form textarea,
+.edit_form select {
   box-sizing: border-box;
   max-width: 100%;
   font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
@@ -449,59 +147,40 @@ body.skin2026 hr {
   color: var(--s26-text);
 }
 
-.skin2026-body a.external-link:not(.external-link-silent)::after {
-  content: " \2197";
+#body a.external-link:not(.external-link-silent)::after {
+  content: " ↗";
   font-size: 0.75em;
   opacity: 0.7;
 }
 
-/* --- Toolbar --- */
-.skin2026-toolbar-wrap {
-  position: sticky;
-  bottom: 0;
-  z-index: 50;
-  background: var(--s26-header-bg);
-  backdrop-filter: blur(8px);
-  border-top: 1px solid var(--s26-border);
-  padding: 0.5rem 1.25rem;
-}
-
-.skin2026-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  justify-content: center;
-  max-width: var(--s26-max-width);
-  margin: 0 auto;
-}
-
-.skin2026-toolbar-link {
-  display: inline-flex;
-  padding: 0.25rem;
+/* Rightbar plugin content */
+.s26-rightbar-slot #rightbar {
+  padding: 1rem;
+  font-size: 0.875rem;
+  border: 1px solid var(--s26-border);
   border-radius: var(--s26-radius-sm);
-  transition: background 0.15s ease;
+  background: var(--s26-surface-elevated);
 }
 
-.skin2026-toolbar-link:hover {
-  background: var(--s26-accent-soft);
-  text-decoration: none;
+.s26-rightbar-slot #rightbar h4 {
+  margin: 0.75rem 0 0.35rem;
+  font-size: 0.95rem;
 }
 
-/* --- Footer --- */
-.skin2026-footer {
-  max-width: var(--s26-max-width);
-  margin: 0 auto;
-  padding: 1.5rem 1.25rem 2.5rem;
-  font-size: 0.8rem;
+.s26-rightbar-slot #rightbar ul {
+  margin: 0.25rem 0 0.25rem 1rem;
+  padding: 0;
+}
+
+/* Footer meta */
+.s26-footer-slot #footer {
+  font-size: 0.8125rem;
   color: var(--s26-text-muted);
-  border-top: 1px solid var(--s26-border);
 }
 
-.skin2026-footer p {
-  margin: 0.35rem 0;
-}
+.s26-footer-slot #footer p { margin: 0.35rem 0; }
 
-/* --- PukiWiki plugin / legacy classes --- */
+/* PukiWiki plugin / legacy */
 .small { font-size: 0.85em; }
 .page_passage { font-size: 0.85em; color: var(--s26-text-muted); }
 span.noexists { background: #fff3cd; color: inherit; padding: 0 0.15em; border-radius: 3px; }
@@ -567,10 +246,7 @@ strong.word9 { background: #6b21a8; color: #fff; }
 
 .edit_form { clear: both; }
 .edit_form textarea,
-.edit_form select {
-  width: 100%;
-  max-width: 100%;
-}
+.edit_form select { width: 100%; max-width: 100%; }
 
 div#preview {
   background: var(--s26-accent-soft);
@@ -590,9 +266,7 @@ div#preview {
 .pkwk-edit-dd-status { min-height: 1.2em; margin: 0.25em 0; color: var(--s26-text-muted); }
 .pkwk-edit-dd-status--error { color: #dc2626; font-weight: bold; }
 
-.anchor_super,
-a.note_super,
-.super_index {
+.anchor_super, a.note_super, .super_index {
   font-size: 0.65em;
   vertical-align: super;
   color: #dc2626;
@@ -605,38 +279,71 @@ div.jumpmenu {
   color: var(--s26-text-muted);
 }
 
-hr.full_hr,
-hr.note_hr {
+hr.full_hr, hr.note_hr {
   border: none;
   border-top: 1px solid var(--s26-border);
   margin: 1.25em 0;
 }
 
+img.ref-full { max-width: none; width: auto; height: auto; }
+
+a.ref-popup-trigger { cursor: zoom-in; }
+
+.ref-popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(8px);
+  cursor: zoom-out;
+}
+
+.ref-popup-overlay img {
+  display: block;
+  max-width: 100vw;
+  max-height: 100vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  cursor: default;
+  border-radius: 8px;
+}
+
+.ref-popup-overlay.ref-popup-overlay--closing {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
 /* Edit mode: full-height textarea */
 @media screen {
-  body.skin2026:has(form._plugin_edit_edit_form) {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+  body.skin2026:has(form._plugin_edit_edit_form) .s26-app {
     min-height: 100dvh;
   }
-  body.skin2026:has(form._plugin_edit_edit_form) .skin2026-main {
+  body.skin2026:has(form._plugin_edit_edit_form) .s26-main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+  body.skin2026:has(form._plugin_edit_edit_form) .s26-contents {
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
     min-height: 0;
   }
-  body.skin2026:has(form._plugin_edit_edit_form) .skin2026-contents {
+  body.skin2026:has(form._plugin_edit_edit_form) .s26-article-shell,
+  body.skin2026:has(form._plugin_edit_edit_form) .s26-article-card,
+  body.skin2026:has(form._plugin_edit_edit_form) .s26-body-slot,
+  body.skin2026:has(form._plugin_edit_edit_form) #body {
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
     min-height: 0;
-  }
-  body.skin2026:has(form._plugin_edit_edit_form) .skin2026-body {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
+    max-width: none;
   }
   body.skin2026:has(form._plugin_edit_edit_form) .edit_form {
     flex: 1 1 auto;
@@ -655,24 +362,8 @@ hr.note_hr {
   }
   body.skin2026:has(form._plugin_edit_edit_form) .edit_form textarea[name="msg"] {
     flex: 1 1 auto;
-    min-height: 12em;
+    min-height: 14em;
     height: auto;
     resize: vertical;
   }
-}
-
-/* Legacy ID hooks (plugins may target these) */
-div#header,
-div#navigator,
-div#contents,
-div#body,
-div#menubar,
-#rightbar,
-div#note,
-div#attach,
-div#toolbar,
-div#lastmodified,
-div#related,
-div#footer {
-  /* skin2026 uses class-based layout; IDs kept for plugin compatibility */
 }
