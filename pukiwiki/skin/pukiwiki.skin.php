@@ -185,7 +185,7 @@ function skin_app_toolbar_hidden($key, $x = 20, $y = 20) {
  <meta charset="<?php echo CONTENT_CHARSET ?>" />
  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <?php if ($nofollow || ! $is_read)  { ?> <meta name="robots" content="NOINDEX,NOFOLLOW" /><?php } ?>
-<?php if ($html_meta_referrer_policy) { ?> <meta name="referrer" content="<?php echo htmlsc(html_meta_referrer_policy) ?>" /><?php } ?>
+<?php if ($html_meta_referrer_policy) { ?> <meta name="referrer" content="<?php echo htmlsc($html_meta_referrer_policy) ?>" /><?php } ?>
 
  <title><?php echo $title ?> - <?php echo $page_title ?></title>
 

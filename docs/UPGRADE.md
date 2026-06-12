@@ -13,14 +13,22 @@
 | **Core（ベース）** | `D:\00_project\pukiwiki2026` | `/public_html/pukiwiki` |
 | **Plus（上書き）** | `D:\00_project\pukiwiki2026 Plus` | Core 設置先を **手動上書き** |
 
-Plus リポジトリには `wiki/`・`attach/`・`cache/` 実データと `pukiwiki.ini.php` を含めません（`.gitignore`）。上書きコピーしても本番のユーザーデータは消えません。
+**実運用例（debugprint.com）**
+
+| 項目 | パス |
+|------|------|
+| ローカル Plus | `D:\00_project\pukiwiki2026 Plus` |
+| 本番 | `/public_html/debugprint.com/pukiwiki` |
+| 公開 URL | https://debugprint.com/ |
+
+旧 Core 設置先を Plus で **フル上書き** する想定。Plus リポジトリには `wiki/`・`attach/`・`cache/` 実データと `pukiwiki.ini.php` を含めません（`.gitignore`）。除外付きコピーなら本番のユーザーデータは消えません。
 
 ---
 
 ## 1. Core（PukiWiki2026）を設置する
 
 1. [PukiWiki2026](https://github.com/kuwa2005/PukiWiki2026) を clone または release を取得
-2. 本番 `/public_html/pukiwiki`（または相当パス）に配置
+2. 本番 `/public_html/pukiwiki`（または `/public_html/debugprint.com/pukiwiki` 等）に配置
 3. [SETUP.md](https://github.com/kuwa2005/PukiWiki2026/blob/main/pukiwiki/docs/SETUP.md) に従い `pukiwiki/pukiwiki.ini.php` を作成
 4. ブラウザで表示・編集を確認
 
@@ -32,7 +40,16 @@ Plus リポジトリには `wiki/`・`attach/`・`cache/` 実データと `pukiw
 
 ---
 
-## 3. Plus を取得する
+## 3. Plus を取得する（ローカル）
+
+本番へコピーする前に、ローカル Plus リポジトリを最新化する。
+
+```powershell
+cd "D:\00_project\pukiwiki2026 Plus"
+git pull
+```
+
+初回 clone の場合:
 
 ```bash
 git clone https://github.com/kuwa2005/PukiWiki2026-Plus.git
@@ -43,15 +60,29 @@ cd PukiWiki2026-Plus && git pull
 
 ## 4. Plus で本番を上書きする
 
-**コピーする:** `index.php`、`.htaccess`、`pukiwiki/` のプログラム類（`skin/dist/` 含む）。
+### 上書きの原則
+
+| 区分 | パス | 扱い |
+|------|------|------|
+| **上書きしない** | `pukiwiki/pukiwiki.ini.php` | 本番 ini を維持（サーバー上で必要なら部分編集のみ） |
+| **上書きしない** | `pukiwiki/wiki/*.txt` | ページデータ |
+| **上書きしない** | `pukiwiki/attach/*` | 添付ファイル |
+| **上書きしない** | `pukiwiki/cache/*` | キャッシュ |
+| **上書きしない** | `pukiwiki/backup/**` `diff/**` `counter/**` | 実データ |
+| **上書きする** | `index.php` `.htaccess` | ルート |
+| **上書きする** | `pukiwiki/skin/pukiwiki.skin.php` | React スキン（`391fdce` 以降の 500 修正を含む） |
+| **上書きする** | `pukiwiki/skin/dist/` | ビルド済み CSS/JS |
+| **上書きする** | `pukiwiki/lib/` `pukiwiki/plugin/` 等 | プログラム類 |
+
+**コピーする:** `index.php`、`.htaccess`、`pukiwiki/` のプログラム類（`skin/pukiwiki.skin.php`・`skin/dist/` 含む）。
 
 **本番で上書きしない:** `pukiwiki.ini.php`、`wiki/**`（ページデータ）、`attach/**`（実ファイル）、`cache/**`、`backup/**`、`diff/**`、`counter/**`（実データ）。
 
-### PowerShell 例
+### PowerShell 例（debugprint.com）
 
 ```powershell
 $Source = "D:\00_project\pukiwiki2026 Plus"
-$Target = "C:\path\to\public_html\pukiwiki"
+$Target = "\\server\public_html\debugprint.com\pukiwiki"   # または SCP/FTP 先のローカルミラー
 
 Copy-Item "$Source\index.php","$Source\.htaccess" $Target -Force
 $skip = @('wiki','attach','cache','backup','diff','counter','pukiwiki.ini.php')
@@ -67,12 +98,12 @@ rsync -av \
   --exclude 'pukiwiki/cache/' --exclude 'pukiwiki/backup/' \
   --exclude 'pukiwiki/diff/' --exclude 'pukiwiki/counter/' \
   --exclude 'pukiwiki/pukiwiki.ini.php' \
-  /path/to/PukiWiki2026-Plus/ /path/to/public_html/pukiwiki/
+  /path/to/PukiWiki2026-Plus/ /public_html/debugprint.com/pukiwiki/
 ```
 
 ---
 
-## 5. スキン設定（既定）
+## 5. スキン設定（本番 ini）
 
 Plus の既定は React シェル付き `pukiwiki/skin/`。新規設置では `pukiwiki.ini.php.example` のとおり:
 
@@ -82,21 +113,28 @@ define('SKIN_DIR', 'pukiwiki/skin/');
 
 詳細: [SKIN-REACT.md](SKIN-REACT.md)
 
-旧 `skin2026` を指定している本番は `pukiwiki/skin/` に戻す。
+**既存本番:** 旧 ini で `skin2026` を指定している場合は、**ini ファイル全体を開発環境から上書きせず**、サーバー上の `pukiwiki.ini.php` を編集して `SKIN_DIR` を `pukiwiki/skin/` に変更する。
 
 ---
 
 ## 6. 確認
 
-OPcache クリア、表示・編集・添付を確認。`pukiwiki/skin/dist/skin-app.css` と `skin-app.js` が **200** であること。
+1. OPcache をクリア（利用中の場合）
+2. トップページが **HTTP 200** であること  
+   - 例: https://debugprint.com/
+3. RSS が **HTTP 200** であること  
+   - 例: https://debugprint.com/?cmd=rss
+4. `pukiwiki/skin/dist/skin-app.css` と `skin-app.js` が **200** であること
+5. 表示・編集・添付を目視確認
 
 ---
 
 ## 7. アップデート
 
-1. Core を先に最新化（[DEPLOY.md §4.7](https://github.com/kuwa2005/PukiWiki2026/blob/main/pukiwiki/docs/DEPLOY.md)）
-2. Plus リポジトリを最新化
-3. バックアップ → §4 を再実行
+1. Core を先に最新化（[DEPLOY.md §4.7](https://github.com/kuwa2005/PukiWiki2026/blob/main/pukiwiki/docs/DEPLOY.md)）— Core 単体更新時のみ
+2. **ローカル** Plus リポジトリで `git pull`（§3）
+3. バックアップ → §4 を再実行（本番へコピー）
+4. §6 の HTTP 200 確認
 
 ---
 
