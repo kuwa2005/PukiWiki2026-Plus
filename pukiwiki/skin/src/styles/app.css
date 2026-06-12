@@ -1,7 +1,18 @@
 /* PukiWiki2026 Plus — default skin React shell */
 
+/* Layout tokens — theme-independent (must not live in html[data-theme="light"]) */
+:root {
+  --s26-radius: 16px;
+  --s26-sidebar-w: 280px;
+  --s26-sidebar-gap: 0px;
+  --s26-main-gutter: 1.25rem;
+  --s26-topbar-h: 56px;
+  --s26-blur: blur(20px);
+}
+
 :root,
 html[data-theme="light"] {
+  color-scheme: light;
   --s26-bg: #f0f9ff;
   --s26-surface: rgba(255, 255, 255, 0.72);
   --s26-surface-solid: #ffffff;
@@ -13,12 +24,6 @@ html[data-theme="light"] {
   --s26-accent-2: #06b6d4;
   --s26-accent-soft: rgba(14, 165, 233, 0.14);
   --s26-shadow: 0 8px 32px rgba(15, 23, 42, 0.08);
-  --s26-radius: 16px;
-  --s26-sidebar-w: 280px;
-  --s26-sidebar-gap: 0px;
-  --s26-main-gutter: 1.25rem;
-  --s26-topbar-h: 56px;
-  --s26-blur: blur(20px);
   --s26-fab-bg: #0ea5e9;
   --s26-fab-fg: #ffffff;
   --s26-fab-icon: #ffffff;
@@ -27,6 +32,7 @@ html[data-theme="light"] {
 }
 
 html[data-theme="dark"] {
+  color-scheme: dark;
   --s26-bg: #090b10;
   --s26-surface: rgba(22, 27, 38, 0.78);
   --s26-surface-solid: #161b26;
@@ -408,7 +414,7 @@ a.s26-sidebar-site-title:hover {
 
 .s26-hero {
   margin-top: 0.75rem;
-  padding: 1rem 1.5rem;
+  padding: 1rem var(--s26-main-gutter);
   border-radius: calc(var(--s26-radius) + 4px);
   border: 1px solid var(--s26-border);
   background: linear-gradient(135deg, var(--s26-surface) 0%, color-mix(in srgb, var(--s26-accent-soft) 60%, transparent) 100%);
