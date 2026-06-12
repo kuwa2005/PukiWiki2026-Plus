@@ -3,6 +3,7 @@ import CommandPalette from './components/CommandPalette.jsx'
 import Fab from './components/Fab.jsx'
 import MobileNav from './components/MobileNav.jsx'
 import Sidebar from './components/Sidebar.jsx'
+import ToolbarRow from './components/ToolbarRow.jsx'
 import TopBar from './components/TopBar.jsx'
 import { adoptNode, readTheme, writeTheme } from './lib/dom.js'
 import {
@@ -33,6 +34,11 @@ export default function App ({ config }) {
   const titleRef = useRef(null)
   const topicpathRef = useRef(null)
   const resizeRef = useRef({ active: false, startX: 0, startWidth: SIDEBAR_DEFAULT })
+  const sidebarWidthRef = useRef(sidebarWidth)
+
+  useLayoutEffect(() => {
+    sidebarWidthRef.current = sidebarWidth
+  }, [sidebarWidth])
 
   useLayoutEffect(() => {
     adoptNode('menubar', menuRef)
@@ -64,9 +70,9 @@ export default function App ({ config }) {
     return () => mq.removeEventListener('change', onChange)
   }, [])
 
-  const onResizeMove = useCallback((e) => {
+  const onResizeMove = useCallback((clientX) => {
     if (!resizeRef.current.active) return
-    const delta = e.clientX - resizeRef.current.startX
+    const delta = clientX - resizeRef.current.startX
     setSidebarWidth(clampSidebarWidth(resizeRef.current.startWidth + delta))
   }, [])
 
@@ -74,28 +80,36 @@ export default function App ({ config }) {
     if (!resizeRef.current.active) return
     resizeRef.current.active = false
     document.body.classList.remove('s26-resizing')
-    document.removeEventListener('mousemove', onResizeMove)
-    document.removeEventListener('mouseup', onResizeEnd)
     setSidebarWidth((w) => {
       writeSidebarWidth(w)
       return w
     })
-  }, [onResizeMove])
+  }, [])
 
-  const onResizeStart = useCallback((e) => {
+  const onSplitterPointerDown = useCallback((e) => {
     if (!isDesktop || e.button !== 0) return
     e.preventDefault()
-    resizeRef.current = { active: true, startX: e.clientX, startWidth: sidebarWidth }
+    e.currentTarget.setPointerCapture(e.pointerId)
+    resizeRef.current = {
+      active: true,
+      startX: e.clientX,
+      startWidth: sidebarWidthRef.current
+    }
     document.body.classList.add('s26-resizing')
-    document.addEventListener('mousemove', onResizeMove)
-    document.addEventListener('mouseup', onResizeEnd)
-  }, [isDesktop, onResizeEnd, onResizeMove, sidebarWidth])
+  }, [isDesktop])
 
-  useEffect(() => () => {
-    document.removeEventListener('mousemove', onResizeMove)
-    document.removeEventListener('mouseup', onResizeEnd)
-    document.body.classList.remove('s26-resizing')
-  }, [onResizeEnd, onResizeMove])
+  const onSplitterPointerMove = useCallback((e) => {
+    if (!resizeRef.current.active) return
+    onResizeMove(e.clientX)
+  }, [onResizeMove])
+
+  const onSplitterPointerUp = useCallback((e) => {
+    if (!resizeRef.current.active) return
+    if (e.currentTarget.hasPointerCapture?.(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId)
+    }
+    onResizeEnd()
+  }, [onResizeEnd])
 
   const toggleTheme = useCallback(() => {
     setTheme((t) => (t === 'dark' ? 'light' : 'dark'))
@@ -129,6 +143,8 @@ export default function App ({ config }) {
   const showToolbars = isLoggedIn && config.showToolbars !== false
   const showFab = isLoggedIn && showToolbars && config.rw && config.isPage && config.isRead && editHref
   const sidebarVisible = isDesktop || sidebarOpen
+  const logoutHref = isLoggedIn ? (config.links?.logout || '') : ''
+  const logoutLabel = config.labels?.logout || 'Log out'
 
   const appStyle = isDesktop
     ? { '--s26-sidebar-w': `${sidebarWidth}px` }
@@ -151,6 +167,7 @@ export default function App ({ config }) {
         isDesktop={isDesktop}
         onToggle={() => setSidebarOpen((v) => !v)}
         menuRef={menuRef}
+        config={config}
       />
 
       {isDesktop && (
@@ -163,7 +180,10 @@ export default function App ({ config }) {
           aria-valuemax={SIDEBAR_MAX}
           aria-valuenow={sidebarWidth}
           tabIndex={0}
-          onMouseDown={onResizeStart}
+          onPointerDown={onSplitterPointerDown}
+          onPointerMove={onSplitterPointerMove}
+          onPointerUp={onSplitterPointerUp}
+          onPointerCancel={onSplitterPointerUp}
           onKeyDown={(e) => {
             if (e.key === 'ArrowLeft') {
               e.preventDefault()
@@ -193,6 +213,14 @@ export default function App ({ config }) {
           onToggleSidebar={() => setSidebarOpen((v) => !v)}
           titleRef={titleRef}
           topicpathRef={topicpathRef}
+          toolbar={(
+            <ToolbarRow
+              showToolbars={showToolbars}
+              toolbarRef={toolbarRef}
+              logoutHref={logoutHref}
+              logoutLabel={logoutLabel}
+            />
+          )}
         />
 
         <div id="contents" className="s26-contents">
@@ -211,8 +239,6 @@ export default function App ({ config }) {
           <div ref={footerRef} className="s26-footer-slot" />
         </div>
       </div>
-
-      <div ref={toolbarRef} className="s26-toolbar-compat" hidden aria-hidden="true" />
 
       {showToolbars && (
         <MobileNav config={config} onOpenPalette={() => setPaletteOpen(true)} />

@@ -167,8 +167,9 @@ function skin_app_build_config(array $scope) {
 	}
 
 	return array(
-		'siteTitle'    => $title,
+		'siteTitle'    => $page_title,
 		'pageTitle'    => $page_title,
+		'currentTitle' => $title,
 		'page'         => $is_page ? $page : '',
 		'isPage'       => (bool)$is_page,
 		'isRead'       => (bool)$is_read,
@@ -262,7 +263,16 @@ function skin_app_toolbar_hidden($key, $x = 20, $y = 20) {
  <?php if(SKIN_DEFAULT_DISABLE_TOPICPATH) { ?>
   <a href="<?php echo $link['canonical_url'] ?>"><?php echo $link['canonical_url'] ?></a>
  <?php } else { ?>
-  <?php require_once(PLUGIN_DIR . 'topicpath.inc.php'); echo plugin_topicpath_inline(); ?>
+  <?php
+  require_once(PLUGIN_DIR . 'topicpath.inc.php');
+  $skin_app_topicpath = plugin_topicpath_inline();
+  if ($skin_app_topicpath === '' && isset($defaultpage) && $page === $defaultpage && PLUGIN_TOPICPATH_TOP_DISPLAY) {
+  	$skin_app_topicpath = '<span class="topicpath-top">' .
+  		make_pagelink($defaultpage, PLUGIN_TOPICPATH_TOP_LABEL) .
+  		'</span>';
+  }
+  echo $skin_app_topicpath;
+  ?>
  <?php } ?>
  </nav>
 <?php } ?>
