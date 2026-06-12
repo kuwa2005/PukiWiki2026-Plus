@@ -7,7 +7,10 @@ export default function Sidebar ({ open, isDesktop, onToggle, menuRef, config })
   const topLabel = config?.labels?.top || 'Top'
   const siteTitle = config?.pageTitle || config?.siteTitle || ''
   const isLoggedIn = Boolean(config?.isLoggedIn)
-  const loginHref = !isLoggedIn ? (config?.links?.login || '') : ''
+  const authHref = isLoggedIn
+    ? (config?.links?.logout || '')
+    : (config?.links?.login || '')
+  const authLabel = isLoggedIn ? 'ログアウト' : 'ログイン'
 
   return (
     <>
@@ -52,8 +55,8 @@ export default function Sidebar ({ open, isDesktop, onToggle, menuRef, config })
           )}
         </div>
 
-        {loginHref && (
-          <a href={loginHref} className="s26-sidebar-login-hint" aria-label="ログイン">.</a>
+        {authHref && (
+          <a href={authHref} className="s26-sidebar-login-hint" aria-label={authLabel}>.</a>
         )}
       </aside>
     </>
