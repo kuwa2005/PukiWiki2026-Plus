@@ -404,13 +404,21 @@ a.s26-sidebar-site-title:hover {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin: 0.75rem calc(-1 * var(--s26-main-gutter)) 0;
+  margin: 0 calc(-1 * var(--s26-main-gutter));
   width: calc(100% + 2 * var(--s26-main-gutter));
   box-sizing: border-box;
 }
 
+.s26-topbar:has(.s26-head-slot:not(:empty)) {
+  padding-top: 0;
+}
+
+.s26-app--no-toolbars .s26-topbar:has(.s26-head-slot:not(:empty)) {
+  padding-top: 0;
+}
+
 .s26-head-slot .plugin-head {
-  border-radius: var(--s26-radius);
+  border-radius: 0;
   overflow: hidden;
 }
 
@@ -801,7 +809,6 @@ body.s26-resizing .s26-sidebar-splitter {
 
 @media (min-width: 1024px) {
   :root {
-    --s26-sidebar-gap: 4.5rem;
     --s26-main-gutter: 1.25rem;
   }
 

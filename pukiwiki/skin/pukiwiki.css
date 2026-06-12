@@ -163,6 +163,7 @@ body.skin-app hr { border: none; border-top: 1px solid var(--s26-border); margin
   max-width: none;
   margin: 0;
   padding: 0;
+  border-radius: 0;
   box-sizing: border-box;
 }
 
