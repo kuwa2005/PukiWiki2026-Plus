@@ -6,6 +6,8 @@ export default function Sidebar ({ open, isDesktop, onToggle, menuRef, config })
   const topHref = config?.links?.top || ''
   const topLabel = config?.labels?.top || 'Top'
   const siteTitle = config?.pageTitle || config?.siteTitle || ''
+  const isLoggedIn = Boolean(config?.isLoggedIn)
+  const loginHref = !isLoggedIn ? (config?.links?.login || '') : ''
 
   return (
     <>
@@ -49,6 +51,10 @@ export default function Sidebar ({ open, isDesktop, onToggle, menuRef, config })
             <div ref={menuRef} className="s26-menu-slot s26-menu-slot--hidden" aria-hidden="true" />
           )}
         </div>
+
+        {loginHref && (
+          <a href={loginHref} className="s26-sidebar-login-hint" aria-label="ログイン">.</a>
+        )}
       </aside>
     </>
   )

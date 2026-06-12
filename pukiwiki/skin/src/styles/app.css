@@ -270,6 +270,27 @@ a.s26-sidebar-site-title:hover {
   overflow: auto;
 }
 
+.s26-sidebar-login-hint {
+  display: block;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin: 0.25rem 0 0.5rem 1rem;
+  padding: 0;
+  font-size: 0.625rem;
+  line-height: 1;
+  color: var(--s26-text-muted);
+  text-decoration: none;
+  opacity: 0.4;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.s26-sidebar-login-hint:hover,
+.s26-sidebar-login-hint:focus-visible {
+  opacity: 0.75;
+  color: var(--s26-text-muted);
+  text-decoration: none;
+}
+
 .s26-menu-slot--hidden {
   display: none;
 }
