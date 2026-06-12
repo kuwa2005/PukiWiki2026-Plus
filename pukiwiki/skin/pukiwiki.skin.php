@@ -140,26 +140,40 @@ function skin_app_build_config(array $scope) {
 			$item = skin_app_nav_item('filelist', 'list');
 			if ($item) $site_items[] = $item;
 		}
-		$item = skin_app_nav_item('search', 'search');
-		if ($item) $site_items[] = $item;
 		$item = skin_app_nav_item('recent', 'clock');
 		if ($item) $site_items[] = $item;
 		$item = skin_app_nav_item('help', 'help');
 		if ($item) $site_items[] = $item;
-		if ($enable_login) {
-			$item = skin_app_nav_item('login', 'login');
-			if ($item) $site_items[] = $item;
-		}
 		if ($enable_logout) {
 			$item = skin_app_nav_item('logout', 'logout');
 			if ($item) $site_items[] = $item;
 		}
 
-		$nav[] = array(
-			'id'    => 'site',
-			'label' => 'Site',
-			'items' => $site_items,
-		);
+		$item = skin_app_nav_item('search', 'search');
+		if ($item) {
+			$nav[] = array(
+				'id'    => 'search',
+				'label' => '',
+				'items' => array($item),
+			);
+		}
+
+		if ($enable_logout && $site_items) {
+			$nav[] = array(
+				'id'    => 'site',
+				'label' => 'Site',
+				'items' => $site_items,
+			);
+		} elseif ($enable_login) {
+			$item = skin_app_nav_item('login', 'login');
+			if ($item) {
+				$nav[] = array(
+					'id'    => 'auth',
+					'label' => '',
+					'items' => array($item),
+				);
+			}
+		}
 	}
 
 	$links = array();

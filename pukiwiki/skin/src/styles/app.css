@@ -324,6 +324,7 @@ html.skin-app-ready body {
 /* Main layout */
 .s26-main {
   min-height: 100dvh;
+  min-width: 0;
   transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -338,6 +339,7 @@ html.skin-app-ready body {
 .s26-topbar-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.75rem;
   padding: 0.5rem;
   border: 1px solid var(--s26-border);
@@ -346,38 +348,21 @@ html.skin-app-ready body {
   box-shadow: var(--s26-shadow);
 }
 
-.s26-search-trigger {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  min-width: 0;
-  padding: 0.55rem 0.75rem;
-  border: 1px dashed var(--s26-border);
-  border-radius: 12px;
-  background: transparent;
-  color: var(--s26-text-muted);
-  cursor: pointer;
-  font-size: 0.875rem;
-  text-align: left;
-}
-
-.s26-search-trigger span {
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.s26-search-trigger:hover {
-  border-color: color-mix(in srgb, var(--s26-accent) 35%, transparent);
-  color: var(--s26-text);
-}
-
 .s26-topbar-actions {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  margin-left: auto;
+}
+
+.s26-nav-group--search {
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.25rem;
+  border-bottom: 1px solid var(--s26-border);
+}
+
+.s26-nav-group--search .s26-nav-link {
+  font-weight: 600;
 }
 
 .s26-hero {
@@ -421,10 +406,11 @@ html.skin-app-ready body {
 }
 
 .s26-contents {
-  padding: 0.75rem 0.75rem 5.5rem;
+  padding: 0.5rem 0.5rem 5.5rem;
   width: 100%;
   max-width: none;
   margin: 0;
+  box-sizing: border-box;
 }
 
 .s26-app--no-toolbars .s26-contents {
@@ -670,12 +656,25 @@ html[data-theme="dark"] .s26-fab:hover {
     display: none;
   }
 
+  .s26-app--desktop {
+    display: grid;
+    grid-template-columns: var(--s26-sidebar-w) minmax(0, 1fr);
+    align-items: start;
+  }
+
   .s26-app--desktop .s26-sidebar {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100dvh;
+    width: var(--s26-sidebar-w);
     transform: none;
   }
 
   .s26-app--desktop .s26-main {
-    margin-left: var(--s26-sidebar-w);
+    margin-left: 0;
+    grid-column: 2;
+    width: 100%;
   }
 
   .s26-sidebar-close {
@@ -695,7 +694,7 @@ html[data-theme="dark"] .s26-fab:hover {
   }
 
   .s26-contents {
-    padding: 0.75rem 1rem 2rem;
+    padding: 0.5rem 0.75rem 2rem;
   }
 
   .s26-hide-mobile {

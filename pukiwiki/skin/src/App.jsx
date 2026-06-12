@@ -108,7 +108,6 @@ export default function App ({ config }) {
           config={config}
           theme={theme}
           onThemeToggle={toggleTheme}
-          onOpenPalette={() => setPaletteOpen(true)}
           onToggleSidebar={() => setSidebarOpen((v) => !v)}
           titleRef={titleRef}
           topicpathRef={topicpathRef}

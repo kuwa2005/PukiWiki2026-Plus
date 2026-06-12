@@ -4,7 +4,6 @@ export default function TopBar ({
   config,
   theme,
   onThemeToggle,
-  onOpenPalette,
   onToggleSidebar,
   titleRef,
   topicpathRef
@@ -14,12 +13,6 @@ export default function TopBar ({
       <div className="s26-topbar-row">
         <button type="button" className="s26-icon-btn s26-menu-btn" onClick={onToggleSidebar} aria-label="Toggle sidebar">
           <Icon name="menu" />
-        </button>
-
-        <button type="button" className="s26-search-trigger" onClick={onOpenPalette}>
-          <Icon name="search" />
-          <span>Search pages…</span>
-          <kbd className="s26-kbd">⌘K</kbd>
         </button>
 
         <div className="s26-topbar-actions">

@@ -25,7 +25,7 @@ export default function Sidebar ({ open, isDesktop, onToggle, config, menuRef })
 
         <nav className="s26-sidebar-nav">
           {(config.nav || []).map((group) => (
-            <div key={group.id} className="s26-nav-group">
+            <div key={group.id} className={`s26-nav-group${group.id === 'search' ? ' s26-nav-group--search' : ''}`}>
               {group.label && <p className="s26-nav-label">{group.label}</p>}
               <ul className="s26-nav-list">
                 {(group.items || []).map((item) => (
