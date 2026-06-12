@@ -42,10 +42,22 @@ function skin_app_nav_item($key, $icon = 'link') {
 	);
 }
 
-function skin_app_build_config() {
-	global $title, $page_title, $page, $is_page, $is_read, $lang, $link, $rw;
-	global $function_freeze, $is_freeze, $do_backup, $enable_login, $enable_logout;
-	global $menu, $rightbar, $lastmodified;
+function skin_app_build_config(array $scope) {
+	global $page_title, $function_freeze, $do_backup;
+	$lang = & $GLOBALS['_LANG']['skin'];
+	$link = & $GLOBALS['_LINK'];
+
+	$title          = $scope['title'];
+	$page           = $scope['page'];
+	$is_page        = ! empty($scope['is_page']);
+	$is_read        = ! empty($scope['is_read']);
+	$is_freeze      = ! empty($scope['is_freeze']);
+	$rw             = ! empty($scope['rw']);
+	$menu           = isset($scope['menu']) ? $scope['menu'] : FALSE;
+	$rightbar       = isset($scope['rightbar']) ? $scope['rightbar'] : FALSE;
+	$lastmodified   = isset($scope['lastmodified']) ? $scope['lastmodified'] : '';
+	$enable_login   = ! empty($scope['enable_login']);
+	$enable_logout  = ! empty($scope['enable_logout']);
 
 	$labels = array();
 	foreach ($lang as $k => $v) {
@@ -148,7 +160,7 @@ function skin_app_build_config() {
 	);
 }
 
-$skin_app_config = skin_app_build_config();
+$skin_app_config = skin_app_build_config(get_defined_vars());
 
 pkwk_common_headers();
 header('Cache-control: no-cache');
