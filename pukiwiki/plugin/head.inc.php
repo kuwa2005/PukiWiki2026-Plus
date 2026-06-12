@@ -5,9 +5,76 @@
 //
 // Blog-style hero/header image for the main content pane.
 
-define('PLUGIN_HEAD_USAGE', '#head(attach-filename[,height-px])');
+define('PLUGIN_HEAD_USAGE', '#head([pagename/]attach-filename[,height-px])');
 define('PLUGIN_HEAD_MAX_HEIGHT', 2000);
 define('PLUGIN_HEAD_ALLOWED_EXT', '/^(?:jpe?g|png|gif|webp)$/i');
+
+/**
+ * Normalize full-width / half-width colons for attach name comparison.
+ */
+function plugin_head_normalize_colons($name)
+{
+	return str_replace('：', ':', $name);
+}
+
+/**
+ * Candidate attach names (exact + colon variant).
+ *
+ * @return string[]
+ */
+function plugin_head_attach_name_candidates($attach_name)
+{
+	$attach_name = preg_replace('#^.*/#', '', $attach_name);
+	$candidates = array($attach_name);
+	$swapped = strtr($attach_name, array('：' => ':', ':' => '：'));
+	if ($swapped !== $attach_name) {
+		$candidates[] = $swapped;
+	}
+	return array_values(array_unique($candidates));
+}
+
+/**
+ * Resolve attach file on disk (same strategy as #ref / #img, plus colon fallback).
+ *
+ * @return array{attach_name:string,disk_path:string}|false
+ */
+function plugin_head_lookup_disk($attach_page, $attach_name)
+{
+	if (! is_dir(UPLOAD_DIR)) {
+		return FALSE;
+	}
+
+	foreach (plugin_head_attach_name_candidates($attach_name) as $name) {
+		$disk_path = UPLOAD_DIR . encode($attach_page) . '_' . encode($name);
+		if (is_file($disk_path)) {
+			return array('attach_name' => $name, 'disk_path' => $disk_path);
+		}
+	}
+
+	if (! class_exists('AttachPages', FALSE)) {
+		exist_plugin('attach');
+	}
+	$pages = new AttachPages($attach_page, 0);
+	if (! isset($pages->pages[$attach_page])) {
+		return FALSE;
+	}
+
+	$normalized_want = array();
+	foreach (plugin_head_attach_name_candidates($attach_name) as $name) {
+		$normalized_want[plugin_head_normalize_colons($name)] = TRUE;
+	}
+	foreach (array_keys($pages->pages[$attach_page]->files) as $disk_name) {
+		if (! isset($normalized_want[plugin_head_normalize_colons($disk_name)])) {
+			continue;
+		}
+		$disk_path = UPLOAD_DIR . encode($attach_page) . '_' . encode($disk_name);
+		if (is_file($disk_path)) {
+			return array('attach_name' => $disk_name, 'disk_path' => $disk_path);
+		}
+	}
+
+	return FALSE;
+}
 
 /**
  * @return object|false  url, attach_page, attach_name, disk_path
@@ -18,10 +85,7 @@ function plugin_head_resolve($file_path, $page)
 	if ($file_path === '') {
 		return FALSE;
 	}
-	if (preg_match('/[\x00-\x1f\x7f]/', $file_path)) {
-		return FALSE;
-	}
-	if (strpos($file_path, '..') !== FALSE) {
+	if (strpos($file_path, "\0") !== FALSE || strpos($file_path, '..') !== FALSE) {
 		return FALSE;
 	}
 
@@ -31,7 +95,7 @@ function plugin_head_resolve($file_path, $page)
 			$matches[1] .= '/';
 		}
 		$attach_name = $matches[2];
-		$attach_page = get_fullname($matches[1], $page);
+		$attach_page = get_fullname(strip_bracket($matches[1]), $page);
 	} else {
 		$attach_name = $file_path;
 		$attach_page = $page;
@@ -45,10 +109,12 @@ function plugin_head_resolve($file_path, $page)
 		return FALSE;
 	}
 
-	$disk_path = UPLOAD_DIR . encode($attach_page) . '_' . encode($attach_name);
-	if (! is_file($disk_path)) {
+	$found = plugin_head_lookup_disk($attach_page, $attach_name);
+	if ($found === FALSE) {
 		return FALSE;
 	}
+	$attach_name = $found['attach_name'];
+	$disk_path = $found['disk_path'];
 
 	$size = @getimagesize($disk_path);
 	$allowed_types = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP);
@@ -99,7 +165,11 @@ function plugin_head_render($args)
 	$file_path = isset($args[0]) ? $args[0] : '';
 	$resolved = plugin_head_resolve($file_path, $page);
 	if ($resolved === FALSE) {
-		return plugin_head_error('File not found or invalid image: ' . $file_path);
+		$hint = (strpos($file_path, '/') === FALSE)
+			? '（別ページの添付なら ページ名/ファイル名 を指定）'
+			: '';
+		return plugin_head_error('File not found or invalid image: ' . $file_path .
+			' at page "' . $page . '"' . $hint);
 	}
 
 	$height = plugin_head_parse_height(isset($args[1]) ? $args[1] : '');
