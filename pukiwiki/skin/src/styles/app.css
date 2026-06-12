@@ -274,6 +274,79 @@ a.s26-sidebar-site-title:hover {
   display: none;
 }
 
+/* Edit mode sidebar help */
+.s26-edit-help {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-bottom: 0.5rem;
+}
+
+.s26-edit-help-section {
+  margin: 0;
+}
+
+.s26-edit-help-title {
+  margin: 0 0 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--s26-text-muted);
+}
+
+.s26-edit-help-list {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.s26-edit-help-item {
+  margin: 0;
+}
+
+.s26-edit-help-label {
+  margin: 0 0 0.125rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--s26-text);
+}
+
+.s26-edit-help-syntax {
+  margin: 0;
+  font-size: 0.6875rem;
+  line-height: 1.45;
+  color: var(--s26-text-muted);
+}
+
+.s26-edit-help-syntax code {
+  display: block;
+  padding: 0.35rem 0.5rem;
+  border-radius: 8px;
+  background: var(--s26-accent-soft);
+  border: 1px solid var(--s26-border);
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+  font-size: 0.6875rem;
+  color: var(--s26-text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.s26-edit-help-more {
+  margin: 0.625rem 0 0;
+  font-size: 0.75rem;
+}
+
+.s26-edit-help-more a {
+  color: var(--s26-accent);
+  text-decoration: none;
+}
+
+.s26-edit-help-more a:hover {
+  text-decoration: underline;
+}
+
 .s26-menu-slot :is(ul, ol) {
   list-style: none;
   margin: 0;

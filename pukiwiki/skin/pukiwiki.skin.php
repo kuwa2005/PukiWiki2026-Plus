@@ -165,6 +165,10 @@ function skin_app_build_config(array $scope) {
 			$links[$k] = html_entity_decode($v, ENT_QUOTES | ENT_HTML5, CONTENT_CHARSET);
 		}
 	}
+	global $rule_page;
+	if (isset($rule_page) && function_exists('get_page_uri')) {
+		$links['rules'] = get_page_uri($rule_page);
+	}
 
 	return array(
 		'siteTitle'    => $page_title,

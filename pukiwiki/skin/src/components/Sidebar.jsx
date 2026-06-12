@@ -1,6 +1,8 @@
+import EditSidebarHelp from './EditSidebarHelp.jsx'
 import Icon from './Icon.jsx'
 
 export default function Sidebar ({ open, isDesktop, onToggle, menuRef, config }) {
+  const isEdit = Boolean(config?.isEdit)
   const topHref = config?.links?.top || ''
   const topLabel = config?.labels?.top || 'Top'
   const siteTitle = config?.pageTitle || config?.siteTitle || ''
@@ -40,7 +42,12 @@ export default function Sidebar ({ open, isDesktop, onToggle, menuRef, config })
         </div>
 
         <div className="s26-sidebar-menu">
-          <div ref={menuRef} className="s26-menu-slot" />
+          {isEdit
+            ? <EditSidebarHelp config={config} />
+            : <div ref={menuRef} className="s26-menu-slot" />}
+          {isEdit && (
+            <div ref={menuRef} className="s26-menu-slot s26-menu-slot--hidden" aria-hidden="true" />
+          )}
         </div>
       </aside>
     </>
