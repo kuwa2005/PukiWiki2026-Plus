@@ -84,7 +84,7 @@ export default function App ({ config }) {
   const searchHref = config.links?.search || ''
   const isLoggedIn = Boolean(config.isLoggedIn)
   const showToolbars = isLoggedIn && config.showToolbars !== false
-  const showFab = showToolbars && config.rw && config.isPage && config.isRead && editHref
+  const showFab = isLoggedIn && showToolbars && config.rw && config.isPage && config.isRead && editHref
   const sidebarVisible = isDesktop || sidebarOpen
 
   return (
@@ -107,7 +107,6 @@ export default function App ({ config }) {
         <TopBar
           config={config}
           theme={theme}
-          showPageToolbar={showToolbars}
           onThemeToggle={toggleTheme}
           onOpenPalette={() => setPaletteOpen(true)}
           onToggleSidebar={() => setSidebarOpen((v) => !v)}
