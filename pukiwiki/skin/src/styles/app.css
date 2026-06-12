@@ -323,7 +323,7 @@ html.skin-app-ready body {
   position: sticky;
   top: 0;
   z-index: 30;
-  padding: 0.75rem 1rem 0;
+  padding: 0.5rem 0.75rem 0;
   backdrop-filter: var(--s26-blur);
 }
 
@@ -373,8 +373,8 @@ html.skin-app-ready body {
 }
 
 .s26-hero {
-  margin-top: 1rem;
-  padding: 1.25rem 1.5rem;
+  margin-top: 0.75rem;
+  padding: 1rem 1.25rem;
   border-radius: calc(var(--s26-radius) + 4px);
   border: 1px solid var(--s26-border);
   background: linear-gradient(135deg, var(--s26-surface) 0%, color-mix(in srgb, var(--s26-accent-soft) 60%, transparent) 100%);
@@ -413,9 +413,10 @@ html.skin-app-ready body {
 }
 
 .s26-contents {
-  padding: 1rem 1rem 5.5rem;
-  max-width: 1120px;
-  margin: 0 auto;
+  padding: 0.75rem 0.75rem 5.5rem;
+  width: 100%;
+  max-width: none;
+  margin: 0;
 }
 
 .s26-app--no-toolbars .s26-contents {
@@ -644,20 +645,16 @@ html.skin-app-ready body {
     display: none;
   }
 
-  .s26-sidebar {
+  .s26-app--desktop .s26-sidebar {
     transform: none;
   }
 
-  .s26-sidebar:not(.is-open) {
-    transform: translateX(calc(-100% - 1rem));
-  }
-
-  .s26-main--sidebar-open {
+  .s26-app--desktop .s26-main {
     margin-left: var(--s26-sidebar-w);
   }
 
   .s26-sidebar-close {
-    display: inline-flex;
+    display: none;
   }
 
   .s26-menu-btn {
@@ -673,7 +670,7 @@ html.skin-app-ready body {
   }
 
   .s26-contents {
-    padding-bottom: 2rem;
+    padding: 0.75rem 1rem 2rem;
   }
 
   .s26-hide-mobile {

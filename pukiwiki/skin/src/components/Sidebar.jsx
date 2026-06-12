@@ -1,22 +1,26 @@
 import Icon from './Icon.jsx'
 
-export default function Sidebar ({ open, onToggle, config, menuRef }) {
+export default function Sidebar ({ open, isDesktop, onToggle, config, menuRef }) {
   return (
     <>
-      <div
-        className={`s26-sidebar-backdrop${open ? ' is-visible' : ''}`}
-        onClick={onToggle}
-        aria-hidden="true"
-      />
+      {!isDesktop && (
+        <div
+          className={`s26-sidebar-backdrop${open ? ' is-visible' : ''}`}
+          onClick={onToggle}
+          aria-hidden="true"
+        />
+      )}
       <aside className={`s26-sidebar${open ? ' is-open' : ''}`} aria-label="Wiki navigation">
         <div className="s26-sidebar-head">
           <a className="s26-brand" href={config.links?.top || '#'}>
             <span className="s26-brand-mark">W</span>
             <span className="s26-brand-text">{config.siteTitle}</span>
           </a>
-          <button type="button" className="s26-icon-btn s26-sidebar-close" onClick={onToggle} aria-label="Close sidebar">
-            <Icon name="close" />
-          </button>
+          {!isDesktop && (
+            <button type="button" className="s26-icon-btn s26-sidebar-close" onClick={onToggle} aria-label="Close sidebar">
+              <Icon name="close" />
+            </button>
+          )}
         </div>
 
         <nav className="s26-sidebar-nav">

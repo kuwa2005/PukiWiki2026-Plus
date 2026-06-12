@@ -61,7 +61,7 @@ function skin_app_nav_item($key, $icon = 'link') {
 	return array(
 		'key'   => $key,
 		'label' => $lang[$key],
-		'href'  => $link[$key],
+		'href'  => html_entity_decode($link[$key], ENT_QUOTES | ENT_HTML5, CONTENT_CHARSET),
 		'icon'  => $icon,
 	);
 }
@@ -122,7 +122,7 @@ function skin_app_build_config(array $scope) {
 			if ($item) $page_items[] = $item;
 		}
 
-		if ($page_items) {
+		if ($page_items && $enable_logout) {
 			$nav[] = array(
 				'id'    => 'page',
 				'label' => isset($lang['edit']) ? 'Page' : 'Page',
@@ -164,7 +164,10 @@ function skin_app_build_config(array $scope) {
 
 	$links = array();
 	foreach ($link as $k => $v) {
-		if (is_string($v)) $links[$k] = $v;
+		if (is_string($v)) {
+			// Skin $_LINK values use &amp; for HTML; decode for React href / JSON config.
+			$links[$k] = html_entity_decode($v, ENT_QUOTES | ENT_HTML5, CONTENT_CHARSET);
+		}
 	}
 
 	return array(
@@ -175,7 +178,7 @@ function skin_app_build_config(array $scope) {
 		'isRead'       => (bool)$is_read,
 		'isEdit'       => arg_check('edit'),
 		'isLoggedIn'   => (bool)$enable_logout,
-		'showToolbars' => ! $enable_login,
+		'showToolbars' => (bool)$enable_logout,
 		'rw'           => $rw,
 		'hasMenu'      => (bool)$menu,
 		'hasRightbar'  => (bool)$rightbar,

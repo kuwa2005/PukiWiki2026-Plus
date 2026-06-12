@@ -7,7 +7,8 @@ import TopBar from './components/TopBar.jsx'
 import { adoptNode, readTheme, writeTheme } from './lib/dom.js'
 
 export default function App ({ config }) {
-  const [sidebarOpen, setSidebarOpen] = useState(() =>
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [isDesktop, setIsDesktop] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches
   )
   const [paletteOpen, setPaletteOpen] = useState(false)
@@ -44,7 +45,11 @@ export default function App ({ config }) {
 
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 1024px)')
-    const onChange = (e) => setSidebarOpen(e.matches)
+    const onChange = (e) => {
+      setIsDesktop(e.matches)
+      if (e.matches) setSidebarOpen(true)
+    }
+    if (mq.matches) setSidebarOpen(true)
     mq.addEventListener('change', onChange)
     return () => mq.removeEventListener('change', onChange)
   }, [])
@@ -77,11 +82,13 @@ export default function App ({ config }) {
 
   const editHref = config.links?.edit || ''
   const searchHref = config.links?.search || ''
-  const showToolbars = config.showToolbars !== false
+  const isLoggedIn = Boolean(config.isLoggedIn)
+  const showToolbars = isLoggedIn && config.showToolbars !== false
   const showFab = showToolbars && config.rw && config.isPage && config.isRead && editHref
+  const sidebarVisible = isDesktop || sidebarOpen
 
   return (
-    <div className={`s26-app${showToolbars ? '' : ' s26-app--no-toolbars'}`} data-theme={theme}>
+    <div className={`s26-app${showToolbars ? '' : ' s26-app--no-toolbars'}${isDesktop ? ' s26-app--desktop' : ''}`} data-theme={theme}>
       <div className="s26-bg" aria-hidden="true">
         <div className="s26-bg-orb s26-bg-orb--1" />
         <div className="s26-bg-orb s26-bg-orb--2" />
@@ -89,17 +96,18 @@ export default function App ({ config }) {
       </div>
 
       <Sidebar
-        open={sidebarOpen}
+        open={sidebarVisible}
+        isDesktop={isDesktop}
         onToggle={() => setSidebarOpen((v) => !v)}
         config={config}
         menuRef={menuRef}
       />
 
-      <div className={`s26-main${sidebarOpen ? ' s26-main--sidebar-open' : ''}`}>
+      <div className={`s26-main${sidebarVisible ? ' s26-main--sidebar-open' : ''}`}>
         <TopBar
           config={config}
           theme={theme}
-          showToolbar={showToolbars}
+          showPageToolbar={showToolbars}
           onThemeToggle={toggleTheme}
           onOpenPalette={() => setPaletteOpen(true)}
           onToggleSidebar={() => setSidebarOpen((v) => !v)}

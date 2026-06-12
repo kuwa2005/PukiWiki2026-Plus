@@ -11,12 +11,14 @@ const ITEMS = [
 export default function MobileNav ({ config, onOpenPalette }) {
   const links = config.links || {}
   const labels = config.labels || {}
+  const isLoggedIn = Boolean(config.isLoggedIn)
 
   return (
     <nav className="s26-mobile-nav" aria-label="Mobile navigation">
       {ITEMS.filter((item) => {
         if (item.needsPage && !config.isPage) return false
         if (item.needsRw && !config.rw) return false
+        if (item.key === 'edit' && !isLoggedIn) return false
         return links[item.key]
       }).map((item) => (
         <a key={item.key} href={links[item.key]} className="s26-mobile-nav-item">

@@ -1,9 +1,18 @@
 import Icon from './Icon.jsx'
 
-export default function TopBar ({ config, theme, onThemeToggle, onOpenPalette, onToggleSidebar, titleRef, topicpathRef, showToolbar }) {
+export default function TopBar ({
+  config,
+  theme,
+  isLoggedIn,
+  showPageToolbar,
+  onThemeToggle,
+  onOpenPalette,
+  onToggleSidebar,
+  titleRef,
+  topicpathRef
+}) {
   return (
     <header className="s26-topbar">
-      {showToolbar && (
       <div className="s26-topbar-row">
         <button type="button" className="s26-icon-btn s26-menu-btn" onClick={onToggleSidebar} aria-label="Toggle sidebar">
           <Icon name="menu" />
@@ -16,7 +25,7 @@ export default function TopBar ({ config, theme, onThemeToggle, onOpenPalette, o
         </button>
 
         <div className="s26-topbar-actions">
-          {config.rw && config.isPage && config.isRead && config.links?.edit && (
+          {showPageToolbar && config.rw && config.isPage && config.isRead && config.links?.edit && (
             <a className="s26-btn s26-btn--ghost s26-btn--sm" href={config.links.edit}>
               <Icon name="edit" />
               <span className="s26-hide-mobile">{config.labels?.edit || 'Edit'}</span>
@@ -27,7 +36,6 @@ export default function TopBar ({ config, theme, onThemeToggle, onOpenPalette, o
           </button>
         </div>
       </div>
-      )}
 
       {config.isPage && (
         <div className="s26-hero">
