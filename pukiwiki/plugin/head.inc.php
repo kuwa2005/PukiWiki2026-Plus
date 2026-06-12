@@ -5,8 +5,9 @@
 //
 // Blog-style hero/header image for the main content pane.
 
-define('PLUGIN_HEAD_USAGE', '#head([pagename/]attach-filename[,height-px])');
+define('PLUGIN_HEAD_USAGE', '#head([pagename/]attach-filename[,height])');
 define('PLUGIN_HEAD_MAX_HEIGHT', 2000);
+define('PLUGIN_HEAD_HEIGHT_PRESETS', 'small:120,medium:180,default:180,large:300');
 // Suffix check aligned with #ref (PLUGIN_REF_IMAGE) plus .webp
 define('PLUGIN_HEAD_IMAGE_SUFFIX', '/\.(?:gif|png|jpe?g|webp)$/i');
 
@@ -180,7 +181,52 @@ function plugin_head_resolve($file_path, $page)
 		'attach_page' => $attach_page,
 		'attach_name' => $attach_name,
 		'disk_path' => $disk_path,
+		'img_w' => (int)$size[0],
+		'img_h' => (int)$size[1],
 	);
+}
+
+/**
+ * Named height presets (blog-style).
+ *
+ * @return array<string,int>
+ */
+function plugin_head_height_presets()
+{
+	static $presets = null;
+	if ($presets !== null) {
+		return $presets;
+	}
+	$presets = array();
+	foreach (explode(',', PLUGIN_HEAD_HEIGHT_PRESETS) as $pair) {
+		$parts = explode(':', $pair, 2);
+		if (count($parts) !== 2) {
+			continue;
+		}
+		$key = strtolower(trim($parts[0]));
+		$val = (int)trim($parts[1]);
+		if ($key !== '' && $val > 0) {
+			$presets[$key] = $val;
+		}
+	}
+	return $presets;
+}
+
+/**
+ * Clamp display height to plugin maximum.
+ *
+ * @return int|false
+ */
+function plugin_head_clamp_height($h)
+{
+	$h = (int)$h;
+	if ($h < 1) {
+		return FALSE;
+	}
+	if ($h > PLUGIN_HEAD_MAX_HEIGHT) {
+		$h = PLUGIN_HEAD_MAX_HEIGHT;
+	}
+	return $h;
 }
 
 /**
@@ -192,6 +238,21 @@ function plugin_head_parse_height($raw)
 		return FALSE;
 	}
 	$raw = trim($raw);
+	if ($raw === '') {
+		return FALSE;
+	}
+
+	$key = strtolower($raw);
+	$presets = plugin_head_height_presets();
+	if (isset($presets[$key])) {
+		return $presets[$key];
+	}
+
+	// WxH — use height component (native dims like 6432x3900 cap at max)
+	if (preg_match('/^(\d+)\s*[xX×]\s*(\d+)$/u', $raw, $matches)) {
+		return plugin_head_clamp_height($matches[2]);
+	}
+
 	if (! preg_match('/^\d+$/', $raw)) {
 		return FALSE;
 	}
@@ -200,6 +261,18 @@ function plugin_head_parse_height($raw)
 		return FALSE;
 	}
 	return $h;
+}
+
+/**
+ * @return string
+ */
+function plugin_head_height_usage_hint()
+{
+	$names = array_keys(plugin_head_height_presets());
+	$preset_list = implode(' / ', $names);
+	return 'positive integer up to ' . PLUGIN_HEAD_MAX_HEIGHT .
+		', preset (' . $preset_list . '), or WIDTHxHEIGHT (uses height, capped at ' .
+		PLUGIN_HEAD_MAX_HEIGHT . ')';
 }
 
 function plugin_head_format_resolve_error($file_path, $page, $resolved)
@@ -244,18 +317,23 @@ function plugin_head_render($args)
 		return plugin_head_error(plugin_head_format_resolve_error($file_path, $page, $resolved));
 	}
 
-	$height = plugin_head_parse_height(isset($args[1]) ? $args[1] : '');
-	if (isset($args[1]) && $args[1] !== '' && $height === FALSE) {
-		return plugin_head_error('Invalid height (positive integer up to ' . PLUGIN_HEAD_MAX_HEIGHT . '): ' . $args[1]);
+	$height_raw = isset($args[1]) ? $args[1] : '';
+	$height = plugin_head_parse_height($height_raw);
+	if ($height_raw !== '' && $height === FALSE) {
+		return plugin_head_error('Invalid height (' . plugin_head_height_usage_hint() . '): ' . $height_raw);
 	}
 
 	$h_url = htmlsc($resolved->url);
 	$alt = htmlsc($resolved->attach_name);
+	$dim_attrs = '';
+	if (isset($resolved->img_w, $resolved->img_h) && $resolved->img_w > 0 && $resolved->img_h > 0) {
+		$dim_attrs = ' width="' . (int)$resolved->img_w . '" height="' . (int)$resolved->img_h . '"';
+	}
 
 	if ($height === FALSE) {
 		return <<<EOD
 <figure class="plugin-head plugin-head--auto">
-<img class="plugin-head__img" src="$h_url" alt="$alt" decoding="async" />
+<img class="plugin-head__img" src="$h_url" alt="$alt" decoding="async"$dim_attrs />
 </figure>
 
 EOD;
@@ -264,7 +342,7 @@ EOD;
 	$h_px = (int)$height;
 	return <<<EOD
 <figure class="plugin-head plugin-head--cover" style="--plugin-head-h: {$h_px}px">
-<img class="plugin-head__img" src="$h_url" alt="$alt" decoding="async" />
+<img class="plugin-head__img" src="$h_url" alt="$alt" decoding="async"$dim_attrs />
 </figure>
 
 EOD;
