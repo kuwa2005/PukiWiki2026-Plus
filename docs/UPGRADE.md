@@ -129,7 +129,7 @@ rsync -av \
 | DocumentRoot | `/public_html/debugprint.com/pukiwiki/`（`index.php` があるディレクトリ） |
 | DATA_HOME（実体） | `…/pukiwiki/pukiwiki/` |
 | 公開 URL | https://debugprint.com/ |
-| 診断スクリプト URL | https://debugprint.com/pukiwiki/tools/diag-skin.php?token=plus-skin-diag-2026 |
+| 診断スクリプト URL | https://debugprint.com/diag-skin.php?token=plus-skin-diag-2026 |
 
 `…/debugprint.com/` 直下に `index.php` を置く構成ではありません。Plus リポジトリ全体を **`…/debugprint.com/pukiwiki/`** へ上書きしてください（§0・§4）。
 
@@ -143,17 +143,20 @@ rsync -av \
 - `pukiwiki/lib/func.php`
 - `pukiwiki/skin/pukiwiki.skin.php`
 - `pukiwiki/skin/dist/`（ビルド済み JS/CSS）
-- `pukiwiki/tools/diag-skin.php`（診断用・後で削除可）
+- `diag-skin.php`（DocumentRoot 直下・診断用・後で削除可）
+- `pukiwiki/lib/skin-diag.php`（診断本体）
 
 反映後は OPcache をクリアするか、数分待ってから再確認します（§6）。
 
 #### 3. 診断スクリプト `diag-skin.php`（推奨）
 
-1. 上記のとおり `pukiwiki/tools/diag-skin.php` をデプロイ
+`pukiwiki/.htaccess` が `/pukiwiki/tools/` を **403** にするため、診断は **DocumentRoot 直下** の `diag-skin.php` を使います（`index.php` と同じ階層）。
+
+1. 上記のとおり `diag-skin.php` と `pukiwiki/lib/skin-diag.php` をデプロイ
 2. ブラウザで開く:  
-   `https://debugprint.com/pukiwiki/tools/diag-skin.php?token=plus-skin-diag-2026`
-3. 表の **NG** 行が原因候補（例: `function pkwk_effective_skin_dir` → `func.php` 未反映、`$http_response_custom_headers is array` → `init.php` 未反映）
-4. 修正・再デプロイ後、**`pukiwiki/tools/diag-skin.php` をサーバーから削除**
+   `https://debugprint.com/diag-skin.php?token=plus-skin-diag-2026`
+3. 表の **NG** 行が原因候補（例: `function pkwk_effective_skin_dir` → `func.php` 未反映、`$http_response_custom_headers is array` → `init.php` 未反映、`full skin require() render` → スキン描画の Fatal）
+4. 修正・再デプロイ後、**`diag-skin.php` をサーバーから削除**（`skin-diag.php` は残しても動作に影響しませんが、不要なら削除可）
 
 #### 4. キャッシュログ（`skin-error.log`）
 

@@ -1,10 +1,11 @@
 <?php
 /**
- * PukiWiki2026 Plus — React スキン診断（非推奨エントリ）
+ * PukiWiki2026 Plus — React スキン診断（レンタルサーバー向け）
  *
- * 本番では pukiwiki/.htaccess が /pukiwiki/tools/ へのアクセスを 403 にします。
- * 代わりに DocumentRoot 直下の diag-skin.php を使用してください:
- *   https://example.com/diag-skin.php?token=plus-skin-diag-2026
+ * URL: https://example.com/diag-skin.php?token=plus-skin-diag-2026
+ * 診断後は本ファイルを削除してください。
+ *
+ * pukiwiki/.htaccess が /pukiwiki/tools/ を 403 にするため DocumentRoot 直下に配置。
  */
 header('Content-Type: text/html; charset=UTF-8');
 header('Cache-Control: no-store');
@@ -19,7 +20,7 @@ if ($token !== PKWK_DIAG_TOKEN) {
 	exit;
 }
 
-define('DATA_HOME', dirname(__DIR__) . '/');
+define('DATA_HOME', __DIR__ . '/pukiwiki/');
 define('LIB_DIR', DATA_HOME . 'lib/');
 define('PKWK_DIAG_DELETE_HINT', 'diag-skin.php（DocumentRoot 直下）');
 
