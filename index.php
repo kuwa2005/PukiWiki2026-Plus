@@ -22,5 +22,10 @@ if (defined('PKWK_DEBUG') && PKWK_DEBUG) {
 define('DATA_HOME', __DIR__ . '/pukiwiki/');
 define('LIB_DIR',     DATA_HOME . 'lib/');
 
+// Opt-in skin error log for rental servers (pukiwiki/cache/.skin-diag-enabled)
+if (is_readable(DATA_HOME . 'cache/.skin-diag-enabled')) {
+	require(LIB_DIR . 'skin-diag-log.php');
+}
+
 require(LIB_DIR . 'pukiwiki.php');
 ?>

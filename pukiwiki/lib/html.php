@@ -176,7 +176,7 @@ function catbody($title, $page, $body)
 			}
 			$patterns .= '(' . $pattern . ')';
 		}
-		if ($pattern) {
+		if ($patterns !== '') {
 			$whole_pattern  = '/' .
 				'<textarea[^>]*>.*?<\/textarea>' .	// Ignore textareas
 				'|' . '<[^>]*>' .			// Ignore tags
@@ -193,7 +193,19 @@ function catbody($title, $page, $body)
 	// Compat: 'HTML convert time' without time about MenuBar and skin
 	$taketime = elapsedtime();
 
+	$__pkwk_skin_file = pkwk_catbody_resolve_skin_file($__pkwk_skin_file);
 	require($__pkwk_skin_file);
+}
+
+// Emergency: minimal skin when pukiwiki/cache/.skin-minimal-fallback exists
+function pkwk_catbody_resolve_skin_file($skin_file)
+{
+	$flag = DATA_HOME . 'cache/.skin-minimal-fallback';
+	$fallback = DATA_HOME . 'skin/minimal.fallback.skin.php';
+	if (is_readable($flag) && is_readable($fallback)) {
+		return $fallback;
+	}
+	return $skin_file;
 }
 
 function _decorate_Nth_word($matches)
@@ -670,6 +682,9 @@ function pkwk_common_headers()
 {
 	global $http_response_custom_headers;
 	if (! PKWK_OPTIMISE) pkwk_headers_sent();
+	if (! isset($http_response_custom_headers) || ! is_array($http_response_custom_headers)) {
+		$http_response_custom_headers = array();
+	}
 	foreach ($http_response_custom_headers as $header) {
 		header($header);
 	}

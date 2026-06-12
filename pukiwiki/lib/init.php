@@ -553,3 +553,12 @@ if (! isset($comment_auth)) $comment_auth = 0;
 if (! isset($comment_captcha_enabled)) $comment_captcha_enabled = 1;
 if (! isset($comment_rate_limit_max)) $comment_rate_limit_max = 10;
 if (! isset($comment_rate_limit_window)) $comment_rate_limit_window = 3600;
+
+/////////////////////////////////////////////////
+// INI compat: variables added in newer PukiWiki2026 (avoid PHP 8 TypeError in skin)
+
+if (! isset($nofollow)) $nofollow = 0;
+if (! isset($html_meta_referrer_policy)) $html_meta_referrer_policy = '';
+if (! isset($http_response_custom_headers) || ! is_array($http_response_custom_headers)) {
+	$http_response_custom_headers = array();
+}

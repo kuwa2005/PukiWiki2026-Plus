@@ -116,6 +116,75 @@ rsync -av \
 | CSS/JS は 200 だがページ 500 | 上記と同じ（静的ファイルは到達、PHP スキン描画のみ失敗）。`skin-app.js` の更新日時が古いままならコード未反映 | 同上 |
 | 本番 ini に `skin2026` が残っている | 統合後 `skin2026/` は存在しない | **ini 全体を上書きせず** `SKIN_DIR` を `pukiwiki/skin/` に変更（§5）。`d9b1e97` 以降はコード側フォールバックあり |
 | `skin.php` だけ更新し `func.php` を古いまま | `pkwk_effective_skin_dir()` 未定義で Fatal | `skin.php`・`html.php`・`func.php` をセットで上書き |
+| 本番 ini が古く `$http_response_custom_headers` 未定義 | `pkwk_common_headers()` の `foreach` が PHP 8 TypeError → 500（本文 0 バイト） | `pukiwiki/lib/init.php`・`html.php` を最新 Plus で上書き（コード側で空配列フォールバック） |
+
+### レンタルサーバー向けトラブルシュート（PHP エラーログなし）
+
+本番で `?cmd=rss` は **200**、トップ・閲覧が **500**（レスポンス本文 0 バイト）のとき、原因はほぼ **React スキン描画（`catbody()` → `pukiwiki.skin.php`）** です。以下はサーバーの PHP エラーログが見られない場合の手順です。
+
+#### 1. デプロイ先の確認（DocumentRoot）
+
+| 項目 | 正しい例（debugprint.com） |
+|------|---------------------------|
+| DocumentRoot | `/public_html/debugprint.com/pukiwiki/`（`index.php` があるディレクトリ） |
+| DATA_HOME（実体） | `…/pukiwiki/pukiwiki/` |
+| 公開 URL | https://debugprint.com/ |
+| 診断スクリプト URL | https://debugprint.com/pukiwiki/tools/diag-skin.php?token=plus-skin-diag-2026 |
+
+`…/debugprint.com/` 直下に `index.php` を置く構成ではありません。Plus リポジトリ全体を **`…/debugprint.com/pukiwiki/`** へ上書きしてください（§0・§4）。
+
+#### 2. 必須上書きファイル（セットで）
+
+最低限、次を **同じタイミングで** 本番へ反映します。
+
+- `index.php`
+- `pukiwiki/lib/init.php`
+- `pukiwiki/lib/html.php`
+- `pukiwiki/lib/func.php`
+- `pukiwiki/skin/pukiwiki.skin.php`
+- `pukiwiki/skin/dist/`（ビルド済み JS/CSS）
+- `pukiwiki/tools/diag-skin.php`（診断用・後で削除可）
+
+反映後は OPcache をクリアするか、数分待ってから再確認します（§6）。
+
+#### 3. 診断スクリプト `diag-skin.php`（推奨）
+
+1. 上記のとおり `pukiwiki/tools/diag-skin.php` をデプロイ
+2. ブラウザで開く:  
+   `https://debugprint.com/pukiwiki/tools/diag-skin.php?token=plus-skin-diag-2026`
+3. 表の **NG** 行が原因候補（例: `function pkwk_effective_skin_dir` → `func.php` 未反映、`$http_response_custom_headers is array` → `init.php` 未反映）
+4. 修正・再デプロイ後、**`pukiwiki/tools/diag-skin.php` をサーバーから削除**
+
+#### 4. キャッシュログ（`skin-error.log`）
+
+エラーログの代わりに、短時間だけファイルへ記録できます。
+
+1. FTP/SSH で空ファイルを作成: `pukiwiki/cache/.skin-diag-enabled`（`cache/` は書き込み可であること）
+2. 最新の `index.php` と `pukiwiki/lib/skin-diag-log.php` をデプロイ
+3. 500 が出る URL（例: トップ）にアクセス
+4. `pukiwiki/cache/skin-error.log` をダウンロードして `[FATAL]` 行を確認
+5. 調査後、` .skin-diag-enabled` と `skin-error.log` を削除
+
+#### 5. 緊急表示（React なしの最小スキン）
+
+サイトを一時的に閲覧可能にするだけなら:
+
+1. 空ファイルを作成: `pukiwiki/cache/.skin-minimal-fallback`
+2. `pukiwiki/skin/minimal.fallback.skin.php` と `pukiwiki/lib/html.php` をデプロイ
+3. トップが **200** になるか確認（見た目は簡素・React なし）
+4. 本修正デプロイ後、`.skin-minimal-fallback` を削除
+
+#### 6. `.htaccess` で一時的に `display_errors`（最終手段）
+
+DocumentRoot（`…/debugprint.com/pukiwiki/.htaccess`）に **一時的に** 追加:
+
+```apache
+# DEBUG ONLY — 調査後必ず削除
+php_flag display_errors On
+php_value error_reporting 32767
+```
+
+500 のレスポンス本文に Fatal メッセージが出ます。**原因特定後は上記 2 行を削除**してください（本番では非表示が既定）。
 
 ---
 

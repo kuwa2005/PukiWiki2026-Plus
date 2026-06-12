@@ -19,6 +19,29 @@ if (! defined('UI_LANG')) die('UI_LANG is not set');
 if (! isset($_LANG)) die('$_LANG is not set');
 if (! defined('PKWK_READONLY')) die('PKWK_READONLY is not set');
 
+// Partial-deploy compat (func.php 未更新時の Fatal 回避)
+if (! function_exists('pkwk_effective_skin_dir')) {
+function pkwk_effective_skin_dir()
+{
+	if (! defined('SKIN_DIR')) {
+		return 'pukiwiki/skin/';
+	}
+	if (strpos(SKIN_DIR, 'skin2026') !== false) {
+		return 'pukiwiki/skin/';
+	}
+	return SKIN_DIR;
+}
+}
+if (! function_exists('pkwk_footer_credits_html')) {
+function pkwk_footer_credits_html()
+{
+	$c2026 = defined('S_COPYRIGHT_2026') ? S_COPYRIGHT_2026 : '';
+	return S_COPYRIGHT . '.<br />' . $c2026 . '<br />'
+		. 'Powered by PHP ' . PHP_VERSION
+		. '. HTML convert time: ' . elapsedtime() . ' sec.';
+}
+}
+
 $lang  = & $_LANG['skin'];
 $link  = & $_LINK;
 $image = & $_IMAGE['skin'];
@@ -204,8 +227,8 @@ function skin_app_toolbar_hidden($key, $x = 20, $y = 20) {
 <head>
  <meta charset="<?php echo CONTENT_CHARSET ?>" />
  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<?php if ($nofollow || ! $is_read)  { ?> <meta name="robots" content="NOINDEX,NOFOLLOW" /><?php } ?>
-<?php if ($html_meta_referrer_policy) { ?> <meta name="referrer" content="<?php echo htmlsc($html_meta_referrer_policy) ?>" /><?php } ?>
+<?php if (! empty($nofollow) || ! $is_read)  { ?> <meta name="robots" content="NOINDEX,NOFOLLOW" /><?php } ?>
+<?php if (! empty($html_meta_referrer_policy)) { ?> <meta name="referrer" content="<?php echo htmlsc($html_meta_referrer_policy) ?>" /><?php } ?>
 
  <title><?php echo $title ?> - <?php echo $page_title ?></title>
 
@@ -316,10 +339,11 @@ $_IMAGE['skin']['rss']      = 'rss.png';
 <div id="skin-app-root"></div>
 
 <script type="application/json" id="skin-app-config"><?php
-echo json_encode(
+$__skin_app_json = json_encode(
 	$skin_app_config,
 	JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE
 );
+echo ($__skin_app_json !== false) ? $__skin_app_json : '{}';
 ?></script>
 
 <script src="<?php echo $skin_app_dir ?>dist/skin-app.js"></script>

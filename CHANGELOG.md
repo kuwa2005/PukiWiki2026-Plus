@@ -9,6 +9,8 @@ Core の変更履歴は [PukiWiki2026/CHANGELOG.md](https://github.com/kuwa2005/
 
 - **React スキン HTTP 500（PHP 8）** — `skin_app_build_config()` が `catbody()` ローカル変数を明示スコープで受け取るよう修正。`get_defined_vars()` 依存を廃止
 - **skin2026 移行フォールバック** — `pkwk_resolve_skin_file()` / `pkwk_effective_skin_dir()` で削除済み `skin2026` パスを `pukiwiki/skin/` に自動退避
+- **本番 ini 互換（PHP 8）** — 未定義の `$http_response_custom_headers` / `$nofollow` / `$html_meta_referrer_policy` で `pkwk_common_headers()` やスキンが TypeError にならないよう `init.php` と `html.php` でフォールバック
+- **部分デプロイ耐性** — `pukiwiki.skin.php` に `pkwk_effective_skin_dir()` 等の互換スタブ、`json_encode` 失敗時 `{}` フォールバック
 
 ### Changed
 
@@ -22,6 +24,9 @@ Core の変更履歴は [PukiWiki2026/CHANGELOG.md](https://github.com/kuwa2005/
 
 - **`pukiwiki/` フルツリー** — Core ベース＋React `skin/`
 - **`docs/SKIN-REACT.md`** — 既定 React スキン手順
+- **`pukiwiki/tools/diag-skin.php`** — レンタルサーバー向けスキン診断（token 保護）
+- **`pukiwiki/lib/skin-diag-log.php`** — `cache/.skin-diag-enabled` で `cache/skin-error.log` に Fatal を記録
+- **`pukiwiki/skin/minimal.fallback.skin.php`** — `cache/.skin-minimal-fallback` で React なし緊急表示
 
 ### Removed
 
