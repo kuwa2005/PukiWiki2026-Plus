@@ -5,7 +5,7 @@ import MobileNav from './components/MobileNav.jsx'
 import Sidebar from './components/Sidebar.jsx'
 import ToolbarRow from './components/ToolbarRow.jsx'
 import TopBar from './components/TopBar.jsx'
-import { adoptNode, relocatePluginHead, readTheme, writeTheme } from './lib/dom.js'
+import { adoptNode, adoptNodeChildren, relocatePluginHead, readTheme, writeTheme } from './lib/dom.js'
 import {
   clampSidebarWidth,
   readSidebarWidth,
@@ -51,7 +51,7 @@ export default function App ({ config }) {
     adoptNode('toolbar', toolbarRef)
     adoptNode('skin-head-slot', headRef)
     adoptNode('skin-app-page-title', titleRef)
-    adoptNode('skin-app-topicpath', topicpathRef)
+    adoptNodeChildren('skin-app-topicpath', topicpathRef)
     relocatePluginHead(headRef, bodyRef.current)
 
     const ssr = document.getElementById('skin-app-ssr')

@@ -65,11 +65,21 @@ function plugin_topicpath_parent_all_links($page)
 	return $parents;
 }
 
+function plugin_topicpath_top_link_html()
+{
+	global $defaultpage;
+	if (! PLUGIN_TOPICPATH_TOP_DISPLAY) return '';
+	return '<span class="topicpath-top">' .
+		make_pagelink($defaultpage, PLUGIN_TOPICPATH_TOP_LABEL) .
+		'</span>';
+}
+
 function plugin_topicpath_inline()
 {
 	global $vars, $defaultpage;
 	$page = isset($vars['page']) ? $vars['page'] : '';
-	if ($page == '' || $page == $defaultpage) return '';
+	if ($page === '') $page = $defaultpage;
+	if ($page === $defaultpage) return plugin_topicpath_top_link_html();
 	$parents = plugin_topicpath_parent_all_links($page);
 	$topic_path = array();
 	foreach ($parents as $p) {

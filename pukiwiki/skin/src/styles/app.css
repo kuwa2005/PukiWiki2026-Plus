@@ -542,10 +542,6 @@ a.s26-sidebar-site-title:hover {
   min-height: 1.25rem;
 }
 
-.s26-topicpath-slot:empty {
-  display: none;
-}
-
 .s26-topicpath-slot a {
   color: var(--s26-accent);
   text-decoration: none;

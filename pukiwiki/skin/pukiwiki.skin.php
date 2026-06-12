@@ -312,10 +312,15 @@ function skin_app_toolbar_hidden($key, $x = 20, $y = 20) {
   <?php
   require_once(PLUGIN_DIR . 'topicpath.inc.php');
   $skin_app_topicpath = plugin_topicpath_inline();
-  if ($skin_app_topicpath === '' && isset($defaultpage) && $page === $defaultpage && PLUGIN_TOPICPATH_TOP_DISPLAY) {
-  	$skin_app_topicpath = '<span class="topicpath-top">' .
-  		make_pagelink($defaultpage, PLUGIN_TOPICPATH_TOP_LABEL) .
-  		'</span>';
+  if ($skin_app_topicpath === '') {
+  	global $vars, $defaultpage;
+  	$skin_app_wiki_page = (isset($vars['page']) && $vars['page'] !== '')
+  		? $vars['page']
+  		: (isset($defaultpage) ? $defaultpage : '');
+  	if ($skin_app_wiki_page !== '' && isset($defaultpage) &&
+  		$skin_app_wiki_page === $defaultpage) {
+  		$skin_app_topicpath = plugin_topicpath_top_link_html();
+  	}
   }
   echo $skin_app_topicpath;
   ?>

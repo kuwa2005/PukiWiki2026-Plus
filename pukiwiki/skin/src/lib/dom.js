@@ -27,6 +27,18 @@ export function adoptNode (id, ref) {
   ref.current.appendChild(el)
 }
 
+/** Move SSR children into a React slot (avoids nested wrappers). */
+export function adoptNodeChildren (id, ref) {
+  const el = document.getElementById(id)
+  if (!el || !ref.current) return
+  el.removeAttribute('hidden')
+  el.hidden = false
+  while (el.firstChild) {
+    ref.current.appendChild(el.firstChild)
+  }
+  el.remove()
+}
+
 /** Move any #head figures still inside #body into the hero slot (SSR fallback). */
 export function relocatePluginHead (slotRef, bodyRoot) {
   if (!slotRef?.current || !bodyRoot) return
