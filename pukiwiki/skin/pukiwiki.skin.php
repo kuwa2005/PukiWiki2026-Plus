@@ -30,6 +30,7 @@ if (arg_check('read') && exist_plugin_convert('rightbar')) {
 	$rightbar = do_plugin_convert('rightbar');
 }
 
+if (! function_exists('skin_app_nav_item')) {
 function skin_app_nav_item($key, $icon = 'link') {
 	$lang = & $GLOBALS['_LANG']['skin'];
 	$link = & $GLOBALS['_LINK'];
@@ -41,7 +42,9 @@ function skin_app_nav_item($key, $icon = 'link') {
 		'icon'  => $icon,
 	);
 }
+}
 
+if (! function_exists('skin_app_build_config')) {
 function skin_app_build_config(array $scope) {
 	global $page_title, $function_freeze, $do_backup;
 	$lang = & $GLOBALS['_LANG']['skin'];
@@ -159,14 +162,30 @@ function skin_app_build_config(array $scope) {
 		'lastmodified' => $lastmodified,
 	);
 }
+}
 
-$skin_app_config = skin_app_build_config(get_defined_vars());
+$skin_app_scope = array(
+	'title'          => $title,
+	'page'           => $page,
+	'is_page'        => $is_page,
+	'is_read'        => $is_read,
+	'is_freeze'      => $is_freeze,
+	'rw'             => $rw,
+	'menu'           => $menu,
+	'rightbar'       => $rightbar,
+	'lastmodified'   => $lastmodified,
+	'enable_login'   => $enable_login,
+	'enable_logout'  => $enable_logout,
+);
+$skin_app_config = skin_app_build_config($skin_app_scope);
+$skin_app_dir = pkwk_effective_skin_dir();
 
 pkwk_common_headers();
 header('Cache-control: no-cache');
 header('Pragma: no-cache');
 header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
 
+if (! function_exists('skin_app_toolbar_hidden')) {
 function skin_app_toolbar_hidden($key, $x = 20, $y = 20) {
 	$lang  = & $GLOBALS['_LANG']['skin'];
 	$link  = & $GLOBALS['_LINK'];
@@ -176,6 +195,7 @@ function skin_app_toolbar_hidden($key, $x = 20, $y = 20) {
 		'<img src="' . IMAGE_DIR . $image[$key] . '" width="' . $x . '" height="' . $y . '" alt="' . $lang[$key] . '" />' .
 		'</a>';
 	return TRUE;
+}
 }
 
 ?>
@@ -192,8 +212,8 @@ function skin_app_toolbar_hidden($key, $x = 20, $y = 20) {
 <?php if ($image['favicon'] !== '') { ?>
  <link rel="icon" href="<?php echo $image['favicon'] ?>" />
 <?php } ?>
- <link rel="stylesheet" href="<?php echo SKIN_DIR ?>dist/skin-app.css" />
- <link rel="stylesheet" href="<?php echo SKIN_DIR ?>pukiwiki.css" />
+ <link rel="stylesheet" href="<?php echo $skin_app_dir ?>dist/skin-app.css" />
+ <link rel="stylesheet" href="<?php echo $skin_app_dir ?>pukiwiki.css" />
  <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $link['rss'] ?>" />
 
 <?php echo $head_tag ?>
@@ -302,12 +322,12 @@ echo json_encode(
 );
 ?></script>
 
-<script src="<?php echo SKIN_DIR ?>dist/skin-app.js"></script>
-<script src="<?php echo SKIN_DIR ?>main.js" defer></script>
-<script src="<?php echo SKIN_DIR ?>search2.js" defer></script>
-<script src="<?php echo SKIN_DIR ?>ref-popup.js" defer></script>
+<script src="<?php echo $skin_app_dir ?>dist/skin-app.js"></script>
+<script src="<?php echo $skin_app_dir ?>main.js" defer></script>
+<script src="<?php echo $skin_app_dir ?>search2.js" defer></script>
+<script src="<?php echo $skin_app_dir ?>ref-popup.js" defer></script>
 <?php if (arg_check('edit')) { ?>
-<script src="<?php echo SKIN_DIR ?>edit-dragdrop.js" defer></script>
+<script src="<?php echo $skin_app_dir ?>edit-dragdrop.js" defer></script>
 <?php } ?>
 </body>
 </html>

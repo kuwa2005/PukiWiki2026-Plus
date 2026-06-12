@@ -40,7 +40,8 @@ function catbody($title, $page, $body)
 			$enable_logout = true;
 		}
 	}
-	if (! file_exists(SKIN_FILE) || ! is_readable(SKIN_FILE))
+	$__pkwk_skin_file = pkwk_resolve_skin_file();
+	if (! file_exists($__pkwk_skin_file) || ! is_readable($__pkwk_skin_file))
 		die_message('SKIN_FILE is not found');
 
 	$_LINK = $_IMAGE = array();
@@ -192,7 +193,7 @@ function catbody($title, $page, $body)
 	// Compat: 'HTML convert time' without time about MenuBar and skin
 	$taketime = elapsedtime();
 
-	require(SKIN_FILE);
+	require($__pkwk_skin_file);
 }
 
 function _decorate_Nth_word($matches)

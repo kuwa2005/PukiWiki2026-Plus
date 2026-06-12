@@ -5,6 +5,11 @@ Core の変更履歴は [PukiWiki2026/CHANGELOG.md](https://github.com/kuwa2005/
 
 ## [Unreleased]
 
+### Fixed
+
+- **React スキン HTTP 500（PHP 8）** — `skin_app_build_config()` が `catbody()` ローカル変数を明示スコープで受け取るよう修正。`get_defined_vars()` 依存を廃止
+- **skin2026 移行フォールバック** — `pkwk_resolve_skin_file()` / `pkwk_effective_skin_dir()` で削除済み `skin2026` パスを `pukiwiki/skin/` に自動退避
+
 ### Changed
 
 - **skin2026 → skin 統合** — React シェルを `pukiwiki/skin/` に移行。既定 `SKIN_DIR` は `pukiwiki/skin/`。`docs/SKIN-REACT.md` 追加

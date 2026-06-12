@@ -656,7 +656,8 @@ function die_message($msg)
 EOD;
 
 	pkwk_common_headers();
-	if(defined('SKIN_FILE') && file_exists(SKIN_FILE) && is_readable(SKIN_FILE)) {
+	$skin_file = pkwk_resolve_skin_file();
+	if (file_exists($skin_file) && is_readable($skin_file)) {
 		catbody($title, $page, $body);
 	} else {
 		$charset = 'utf-8';
@@ -708,6 +709,35 @@ function elapsedtime()
 {
 	$at_the_microtime = MUTIME;
 	return sprintf('%01.03f', getmicrotime() - $at_the_microtime);
+}
+
+// Resolve SKIN_FILE: legacy skin2026 paths or missing files fall back to default skin
+function pkwk_resolve_skin_file()
+{
+	$fallback = DATA_HOME . 'skin/pukiwiki.skin.php';
+	if (! defined('SKIN_FILE')) {
+		return $fallback;
+	}
+	$skin_file = SKIN_FILE;
+	if (strpos($skin_file, 'skin2026') !== false
+		|| ! file_exists($skin_file) || ! is_readable($skin_file)) {
+		if (file_exists($fallback) && is_readable($fallback)) {
+			return $fallback;
+		}
+	}
+	return $skin_file;
+}
+
+// Effective SKIN_DIR for asset URLs (skin2026 merge → pukiwiki/skin/)
+function pkwk_effective_skin_dir()
+{
+	if (! defined('SKIN_DIR')) {
+		return 'pukiwiki/skin/';
+	}
+	if (strpos(SKIN_DIR, 'skin2026') !== false) {
+		return 'pukiwiki/skin/';
+	}
+	return SKIN_DIR;
 }
 
 // Footer credits: upstream PukiWiki, PukiWiki2026, PHP version, convert time
