@@ -136,6 +136,8 @@ function skin_app_build_config() {
 		'isPage'       => (bool)$is_page,
 		'isRead'       => (bool)$is_read,
 		'isEdit'       => arg_check('edit'),
+		'isLoggedIn'   => (bool)$enable_logout,
+		'showToolbars' => ! $enable_login,
 		'rw'           => $rw,
 		'hasMenu'      => (bool)$menu,
 		'hasRightbar'  => (bool)$rightbar,

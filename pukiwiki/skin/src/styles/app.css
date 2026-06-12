@@ -418,6 +418,14 @@ html.skin-app-ready body {
   margin: 0 auto;
 }
 
+.s26-app--no-toolbars .s26-contents {
+  padding-bottom: 1rem;
+}
+
+.s26-app--no-toolbars .s26-topbar {
+  padding-top: 1rem;
+}
+
 .s26-article-shell {
   display: grid;
   gap: 1rem;

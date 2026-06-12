@@ -77,10 +77,11 @@ export default function App ({ config }) {
 
   const editHref = config.links?.edit || ''
   const searchHref = config.links?.search || ''
-  const showFab = config.rw && config.isPage && config.isRead && editHref
+  const showToolbars = config.showToolbars !== false
+  const showFab = showToolbars && config.rw && config.isPage && config.isRead && editHref
 
   return (
-    <div className="s26-app" data-theme={theme}>
+    <div className={`s26-app${showToolbars ? '' : ' s26-app--no-toolbars'}`} data-theme={theme}>
       <div className="s26-bg" aria-hidden="true">
         <div className="s26-bg-orb s26-bg-orb--1" />
         <div className="s26-bg-orb s26-bg-orb--2" />
@@ -98,6 +99,7 @@ export default function App ({ config }) {
         <TopBar
           config={config}
           theme={theme}
+          showToolbar={showToolbars}
           onThemeToggle={toggleTheme}
           onOpenPalette={() => setPaletteOpen(true)}
           onToggleSidebar={() => setSidebarOpen((v) => !v)}
@@ -124,7 +126,9 @@ export default function App ({ config }) {
 
       <div ref={toolbarRef} className="s26-toolbar-compat" hidden aria-hidden="true" />
 
-      <MobileNav config={config} onOpenPalette={() => setPaletteOpen(true)} />
+      {showToolbars && (
+        <MobileNav config={config} onOpenPalette={() => setPaletteOpen(true)} />
+      )}
 
       {showFab && <Fab href={editHref} label={config.labels?.edit || 'Edit'} />}
 
