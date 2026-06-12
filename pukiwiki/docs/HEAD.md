@@ -18,6 +18,18 @@
 
 ## 画像の解決
 
-`attach/`（`UPLOAD_DIR`）内の `encode(ページ名)_encode(ファイル名)` を参照し、存在・画像形式を検証したうえで `?plugin=attach&refer=...&openfile=...` の URL を出力します（`#img` と同系）。
+`attach/`（`UPLOAD_DIR`）内の `encode(ページ名)_encode(ファイル名)` を参照します。解決手順は `#ref` と同じで、存在・画像形式を検証したうえで `?plugin=attach&refer=...&openfile=...` の URL を出力します（`#img` と同系）。
 
-対応拡張子: `.jpg` / `.jpeg` / `.png` / `.gif` / `.webp`
+対応拡張子: `.jpg` / `.jpeg` / `.png` / `.gif` / `.webp`（末尾の拡張子で判定。`name_card2.png.png` のような二重拡張子も可）
+
+- 現在ページの添付: `#head(ファイル名)`（`#ref(ファイル名)` と同じファイル名をそのまま指定）
+- 別ページの添付: `#head(ページ名/ファイル名)`
+- ファイル名に全角コロン `：` を含む場合も、添付名と一致すれば解決します（全角・半角の差異は自動で試行）
+
+例（KURAGASHI ページに添付がある場合）:
+
+```text
+#head(name_card2.png.png)
+#head(生成された画像：ネコ耳アイドルの音楽プロモーション.png)
+#head(生成された画像：ネコ耳アイドルの音楽プロモーション.png,240)
+```

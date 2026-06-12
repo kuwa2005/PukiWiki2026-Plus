@@ -7,7 +7,19 @@
 
 define('PLUGIN_HEAD_USAGE', '#head([pagename/]attach-filename[,height-px])');
 define('PLUGIN_HEAD_MAX_HEIGHT', 2000);
-define('PLUGIN_HEAD_ALLOWED_EXT', '/^(?:jpe?g|png|gif|webp)$/i');
+// Suffix check aligned with #ref (PLUGIN_REF_IMAGE) plus .webp
+define('PLUGIN_HEAD_IMAGE_SUFFIX', '/\.(?:gif|png|jpe?g|webp)$/i');
+
+/**
+ * Image suffix test — prefer #ref's PLUGIN_REF_IMAGE when loaded.
+ */
+function plugin_head_is_image_filename($name)
+{
+	if (defined('PLUGIN_REF_IMAGE') && preg_match(PLUGIN_REF_IMAGE, $name)) {
+		return TRUE;
+	}
+	return preg_match(PLUGIN_HEAD_IMAGE_SUFFIX, $name);
+}
 
 /**
  * Normalize full-width / half-width colons for attach name comparison.
@@ -34,7 +46,45 @@ function plugin_head_attach_name_candidates($attach_name)
 }
 
 /**
- * Resolve attach file on disk (same strategy as #ref / #img, plus colon fallback).
+ * Parse pagename/filename like #ref (ref.inc.php plugin_ref_body).
+ *
+ * @return array{attach_page:string,attach_name:string}|false
+ */
+function plugin_head_parse_attach_target($file_path, $page)
+{
+	$file_path = trim($file_path);
+	if ($file_path === '') {
+		return FALSE;
+	}
+	if (strpos($file_path, "\0") !== FALSE || strpos($file_path, '..') !== FALSE) {
+		return FALSE;
+	}
+
+	$matches = null;
+	if (preg_match('#^(.+)/([^/]+)$#', $file_path, $matches)) {
+		if ($matches[1] === '.' || $matches[1] === '..') {
+			$matches[1] .= '/';
+		}
+		$attach_name = $matches[2];
+		$attach_page = get_fullname(strip_bracket($matches[1]), $page);
+	} else {
+		$attach_name = $file_path;
+		$attach_page = $page;
+	}
+
+	$attach_name = preg_replace('#^.*/#', '', $attach_name);
+	if ($attach_name === '') {
+		return FALSE;
+	}
+	if (! is_pagename($attach_page)) {
+		return FALSE;
+	}
+
+	return array('attach_page' => $attach_page, 'attach_name' => $attach_name);
+}
+
+/**
+ * Resolve attach file on disk (#ref primary path + colon fallback via AttachPages).
  *
  * @return array{attach_name:string,disk_path:string}|false
  */
@@ -44,6 +94,7 @@ function plugin_head_lookup_disk($attach_page, $attach_name)
 		return FALSE;
 	}
 
+	// Primary: encode(page)_encode(name) — same as #ref / #img
 	foreach (plugin_head_attach_name_candidates($attach_name) as $name) {
 		$disk_path = UPLOAD_DIR . encode($attach_page) . '_' . encode($name);
 		if (is_file($disk_path)) {
@@ -51,6 +102,7 @@ function plugin_head_lookup_disk($attach_page, $attach_name)
 		}
 	}
 
+	// Fallback: scan attach index (handles rare encode/name mismatches)
 	if (! class_exists('AttachPages', FALSE)) {
 		exist_plugin('attach');
 	}
@@ -77,41 +129,34 @@ function plugin_head_lookup_disk($attach_page, $attach_name)
 }
 
 /**
- * @return object|false  url, attach_page, attach_name, disk_path
+ * @return object|false  url, attach_page, attach_name, disk_path — or ->_error
  */
 function plugin_head_resolve($file_path, $page)
 {
-	$file_path = trim($file_path);
-	if ($file_path === '') {
-		return FALSE;
-	}
-	if (strpos($file_path, "\0") !== FALSE || strpos($file_path, '..') !== FALSE) {
-		return FALSE;
-	}
+	exist_plugin('ref'); // load PLUGIN_REF_IMAGE when available
 
-	$matches = null;
-	if (preg_match('#^(.+)/([^/]+)$#', $file_path, $matches)) {
-		if ($matches[1] === '.' || $matches[1] === '..') {
-			$matches[1] .= '/';
-		}
-		$attach_name = $matches[2];
-		$attach_page = get_fullname(strip_bracket($matches[1]), $page);
-	} else {
-		$attach_name = $file_path;
-		$attach_page = $page;
+	$target = plugin_head_parse_attach_target($file_path, $page);
+	if ($target === FALSE) {
+		return (object)array('_error' => 'invalid_arg');
 	}
+	$attach_page = $target['attach_page'];
+	$attach_name = $target['attach_name'];
 
-	$attach_name = preg_replace('#^.*/#', '', $attach_name);
-	if ($attach_name === '' || ! preg_match(PLUGIN_HEAD_ALLOWED_EXT, $attach_name)) {
-		return FALSE;
-	}
-	if (! is_pagename($attach_page)) {
-		return FALSE;
+	if (! plugin_head_is_image_filename($attach_name)) {
+		return (object)array(
+			'_error' => 'bad_ext',
+			'attach_page' => $attach_page,
+			'attach_name' => $attach_name,
+		);
 	}
 
 	$found = plugin_head_lookup_disk($attach_page, $attach_name);
 	if ($found === FALSE) {
-		return FALSE;
+		return (object)array(
+			'_error' => 'not_found',
+			'attach_page' => $attach_page,
+			'attach_name' => $attach_name,
+		);
 	}
 	$attach_name = $found['attach_name'];
 	$disk_path = $found['disk_path'];
@@ -119,7 +164,11 @@ function plugin_head_resolve($file_path, $page)
 	$size = @getimagesize($disk_path);
 	$allowed_types = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP);
 	if (! is_array($size) || ! in_array($size[2], $allowed_types, TRUE)) {
-		return FALSE;
+		return (object)array(
+			'_error' => 'bad_image',
+			'attach_page' => $attach_page,
+			'attach_name' => $attach_name,
+		);
 	}
 
 	$url = get_base_uri() . '?plugin=attach' .
@@ -153,6 +202,33 @@ function plugin_head_parse_height($raw)
 	return $h;
 }
 
+function plugin_head_format_resolve_error($file_path, $page, $resolved)
+{
+	$hint = (strpos($file_path, '/') === FALSE)
+		? '（別ページの添付なら ページ名/ファイル名 を指定）'
+		: '';
+
+	if (! is_object($resolved) || ! isset($resolved->_error)) {
+		return 'File not found or invalid image: ' . $file_path .
+			' at page "' . $page . '"' . $hint;
+	}
+
+	switch ($resolved->_error) {
+	case 'bad_ext':
+		return 'Unsupported image extension: ' . $resolved->attach_name .
+			'（.jpg / .jpeg / .png / .gif / .webp のみ。ファイル名そのものを指定）';
+	case 'bad_image':
+		return 'Not a valid image file: ' . $resolved->attach_name .
+			' at page "' . $resolved->attach_page . '"';
+	case 'not_found':
+		return 'File not found: ' . $resolved->attach_name .
+			' at page "' . $resolved->attach_page . '"' . $hint;
+	case 'invalid_arg':
+	default:
+		return 'Invalid argument: ' . $file_path;
+	}
+}
+
 function plugin_head_render($args)
 {
 	global $vars;
@@ -164,12 +240,8 @@ function plugin_head_render($args)
 	$page = isset($vars['page']) ? $vars['page'] : '';
 	$file_path = isset($args[0]) ? $args[0] : '';
 	$resolved = plugin_head_resolve($file_path, $page);
-	if ($resolved === FALSE) {
-		$hint = (strpos($file_path, '/') === FALSE)
-			? '（別ページの添付なら ページ名/ファイル名 を指定）'
-			: '';
-		return plugin_head_error('File not found or invalid image: ' . $file_path .
-			' at page "' . $page . '"' . $hint);
+	if ($resolved === FALSE || (is_object($resolved) && isset($resolved->_error))) {
+		return plugin_head_error(plugin_head_format_resolve_error($file_path, $page, $resolved));
 	}
 
 	$height = plugin_head_parse_height(isset($args[1]) ? $args[1] : '');
