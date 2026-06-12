@@ -10,6 +10,13 @@ alwaysApply: true
 - **作業フォルダ（既定）:** `D:\00_project\pukiwiki2026 Plus`（本リポジトリ）。ターミナルでは先に **`cd "D:\00_project\pukiwiki2026 Plus"`** してからコマンドを実行する。
 - **GitHub:** 本リポジトリ（PukiWiki2026 Plus）。Core は https://github.com/kuwa2005/PukiWiki2026
 
+## 本体（pukiwiki/）改変 — ユーザー確認必須
+
+**プログラム本体**（`lib/`・`plugin/`・`index.php` 等、`skin2026/` を除く `pukiwiki/` 配下）の改変が避けられない場合は、**実装前にユーザーへ選択肢を提示し、承認を得る。** 本体を黙って直さない。
+
+- 選択肢の例は `docs/CORE-BOUNDARY.md` §6 参照（skin のみ回避 / Plus `pukiwiki/` 改変 / Core handoff）。
+- **skin2026 React 再設計**（進行中の作業を含む）でも同様。まず `skin2026/` のみで進め、本体依存が出たら止めて報告する。
+
 ## Core 改変禁止（永続原則）
 
 - **`D:\00_project\pukiwiki2026` へ一切書き込み・改変・削除・新規作成しない。** Plus エージェントの管轄外。
