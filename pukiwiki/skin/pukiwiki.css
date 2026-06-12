@@ -156,6 +156,14 @@ body.skin-app hr { border: none; border-top: 1px solid var(--s26-border); margin
 }
 
 /* #head — blog-style hero image (above page title, full main-pane width) */
+.s26-head-slot #skin-head-slot,
+#skin-head-slot {
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
 .s26-head-slot .plugin-head,
 #skin-head-slot .plugin-head {
   display: block;

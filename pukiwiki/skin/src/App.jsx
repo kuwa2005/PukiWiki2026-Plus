@@ -49,7 +49,7 @@ export default function App ({ config }) {
     adoptNode('attach', attachRef)
     adoptNode('footer', footerRef)
     adoptNode('toolbar', toolbarRef)
-    adoptNode('skin-head-slot', headRef)
+    adoptNodeChildren('skin-head-slot', headRef)
     adoptNode('skin-app-page-title', titleRef)
     adoptNodeChildren('skin-app-topicpath', topicpathRef)
     relocatePluginHead(headRef, bodyRef.current)

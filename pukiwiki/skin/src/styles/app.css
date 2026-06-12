@@ -276,11 +276,11 @@ a.s26-sidebar-site-title:hover {
   align-self: flex-start;
   margin: 0.25rem 0 0.5rem 1rem;
   padding: 0;
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   line-height: 1;
   color: var(--s26-text-muted);
   text-decoration: none;
-  opacity: 0.4;
+  opacity: 0.55;
   transition: opacity 0.15s ease, color 0.15s ease;
 }
 
@@ -396,7 +396,11 @@ a.s26-sidebar-site-title:hover {
 }
 
 .s26-topbar {
-  padding: 0.5rem var(--s26-main-gutter) 0;
+  padding: 0 var(--s26-main-gutter) 0;
+}
+
+.s26-topbar:not(:has(.s26-head-slot:not(:empty))) {
+  padding-top: 0.5rem;
 }
 
 .s26-topbar-row {
@@ -426,19 +430,37 @@ a.s26-sidebar-site-title:hover {
   flex-direction: column;
   gap: 0.5rem;
   margin: 0 calc(-1 * var(--s26-main-gutter));
+  margin-top: 0;
+  padding-top: 0;
   width: calc(100% + 2 * var(--s26-main-gutter));
   box-sizing: border-box;
 }
 
 .s26-topbar:has(.s26-head-slot:not(:empty)) {
+  position: relative;
   padding-top: 0;
+  margin-top: 0;
 }
 
-.s26-app--no-toolbars .s26-topbar:has(.s26-head-slot:not(:empty)) {
-  padding-top: 0;
+.s26-head-slot #skin-head-slot,
+.s26-head-slot > .s26-adopted {
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.s26-topbar:has(.s26-head-slot:not(:empty)) .s26-topbar-row--mobile {
+  position: absolute;
+  top: 0.5rem;
+  left: var(--s26-main-gutter);
+  right: var(--s26-main-gutter);
+  z-index: 2;
+  margin: 0;
 }
 
 .s26-head-slot .plugin-head {
+  margin-top: 0;
   border-radius: 0;
   overflow: hidden;
 }
@@ -584,7 +606,7 @@ a.s26-sidebar-site-title:hover {
   padding-bottom: 1rem;
 }
 
-.s26-app--no-toolbars .s26-topbar {
+.s26-app--no-toolbars .s26-topbar:not(:has(.s26-head-slot:not(:empty))) {
   padding-top: 1rem;
 }
 
