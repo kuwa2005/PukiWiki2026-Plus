@@ -2,7 +2,7 @@
 
 :root,
 html[data-theme="light"] {
-  --s26-bg: #f4f6fb;
+  --s26-bg: #f0f9ff;
   --s26-surface: rgba(255, 255, 255, 0.72);
   --s26-surface-solid: #ffffff;
   --s26-surface-hover: rgba(255, 255, 255, 0.92);
@@ -713,3 +713,4 @@ html[data-theme="dark"] .s26-fab:hover {
     display: inline-flex;
   }
 }
+
