@@ -108,6 +108,29 @@ rsync -av \
   /path/to/PukiWiki2026-Plus/ user@host:/public_html/debugprint.com/pukiwiki/
 ```
 
+### 手動 FTP（WinSCP / FileZilla 等）
+
+FTP/SFTP でアップロードする場合も、**上書きの原則は §4 と同じ**です。GUI クライアントの「同期」機能を使うときは、次を**必ず除外**してください。
+
+| 除外するパス | 理由 |
+|-------------|------|
+| `pukiwiki/pukiwiki.ini.php` | 本番設定（認証・`SKIN_DIR` 等）。**上書き禁止** |
+| `pukiwiki/wiki/` | ページデータ |
+| `pukiwiki/attach/` | 添付ファイル |
+| `pukiwiki/cache/` | キャッシュ（必要なら更新後に削除） |
+| `pukiwiki/backup/` `diff/` `counter/` | 運用データ |
+
+**手順（例）**
+
+1. ローカル Plus で `git pull` し最新化（§3）
+2. FTP で DocumentRoot（例: `…/debugprint.com/pukiwiki/`）に接続
+3. `index.php` と `.htaccess` をアップロード（上書き）
+4. `pukiwiki/` 配下を同期 — **`pukiwiki.ini.php` と wiki/attach 等は除外**
+5. **`pukiwiki/skin/dist/`** を必ず含める（React CSS/JS）
+6. §6 で HTTP 200 を確認。問題時は [§4 HTTP 500](#http-500-が出るときdebugprintcom-で確認済みのパターン) を参照
+
+WinSCP の「同期」ではリモート側の `pukiwiki.ini.php` を保持するため、**除外ファイル一覧**に上表を設定するか、ini だけリモートを優先（Keep remote）にしてください。
+
 ### HTTP 500 が出るとき（debugprint.com で確認済みのパターン）
 
 | 症状 | 原因 | 対処 |

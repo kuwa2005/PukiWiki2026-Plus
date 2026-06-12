@@ -142,6 +142,7 @@ $perm_check_dirs_extra = array(); // 例: カスタム定数を追加
 |------|------|
 | フルコピー | `index.php` + `pukiwiki/` を rsync / scp / FTP で配置 |
 | git pull | 開発環境で `git pull` 後、`index.php` + `pukiwiki/` のみ本番へ同期 |
+| 手動 FTP | WinSCP / FileZilla 等 — **`pukiwiki.ini.php` 除外**が必須。[UPGRADE.md §4](UPGRADE.md) |
 
 **配置から除外するもの（またはサーバー側のみ）:**
 

@@ -45,11 +45,16 @@ PukiWiki2026-Plus/
 
 ## ドキュメント
 
-- [pukiwiki/docs/UPGRADE.md](pukiwiki/docs/UPGRADE.md) — Core 設置 → Plus 上書き
-- [pukiwiki/docs/PRODUCT-STRATEGY.md](pukiwiki/docs/PRODUCT-STRATEGY.md) — プロダクト方針
-- [pukiwiki/docs/CORE-BOUNDARY.md](pukiwiki/docs/CORE-BOUNDARY.md) — Core 境界・handoff
-- [pukiwiki/docs/SKIN-REACT.md](pukiwiki/docs/SKIN-REACT.md) — 既定 React スキン
-- [CHANGELOG.md](CHANGELOG.md)
+索引: [pukiwiki/docs/README.md](pukiwiki/docs/README.md)
+
+| 文書 | 内容 |
+|------|------|
+| [UPGRADE.md](pukiwiki/docs/UPGRADE.md) | Core 設置 → Plus 上書き（手動 FTP / rsync、`pukiwiki.ini.php` 除外） |
+| [SKIN-REACT.md](pukiwiki/docs/SKIN-REACT.md) | 既定 React スキン（サイドバー、#head、編集ヘルプ） |
+| [HEAD.md](pukiwiki/docs/HEAD.md) | `#head` ヒーロー画像プラグイン |
+| [CORE-BOUNDARY.md](pukiwiki/docs/CORE-BOUNDARY.md) | Core 境界・handoff |
+| [PRODUCT-STRATEGY.md](pukiwiki/docs/PRODUCT-STRATEGY.md) | プロダクト方針 |
+| [CHANGELOG.md](CHANGELOG.md) | 変更履歴 |
 
 ## Git
 

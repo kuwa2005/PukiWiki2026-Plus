@@ -67,3 +67,19 @@
 #head(生成された画像：ネコ耳アイドルの音楽プロモーション.png)
 #head(生成された画像：ネコ耳アイドルの音楽プロモーション.png,240)
 ```
+
+## 表示位置（React スキン）
+
+Plus 既定の React スキンでは、`#head` の出力を本文 HTML から抽出し、**ページタイトル（`h1.title`）の上**に一度だけ表示します。
+
+- PHP 側: `skin_app_extract_head_figures()` が `<figure class="plugin-head">` を `#skin-head-slot` へ移動
+- React 側: TopBar の `#head` スロットへ DOM 移譲。メイン領域幅いっぱいの**フルブリード**（上余白なし）
+- 本文中に `#head` を書いても、閲覧時はタイトル上に集約表示され、本文スロットからは除去されます
+
+レイアウト全体: [SKIN-REACT.md](SKIN-REACT.md) §レイアウト
+
+## 関連
+
+- [REF.md](REF.md) — 本文内インライン画像（`#ref`）
+- [SKIN-REACT.md](SKIN-REACT.md) — React スキン UI
+- [EDIT-DRAGDROP.md](EDIT-DRAGDROP.md) — 編集画面での添付 D&D

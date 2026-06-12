@@ -25,8 +25,8 @@ pukiwiki.skin.php (PHP)
   └─ dist/skin-app.js（React IIFE, flushSync 同期マウント）
 
 React App (src/)
-  ├─ サイドバー（折りたたみ + menu プラグイン）
-  ├─ トップバー + ヒーロー（タイトル / topicpath）
+  ├─ サイドバー（MENU + ブランド + 編集ヘルプ + リサイズ）
+  ├─ トップバー（#head → ツールバー → タイトル / topicpath）
   ├─ コマンドパレット（⌘K / Ctrl+K）
   ├─ モバイルボトムナビ + 編集 FAB
   └─ useLayoutEffect で SSR ノードをスロットへ移譲（ID 維持）
@@ -61,6 +61,48 @@ npm run build   # → dist/skin-app.js, dist/skin-app.css
 ```bash
 npm run dev     # Vite dev server（PHP 連携は手動）
 ```
+
+## レイアウト（2026-06-12 以降）
+
+### サイドバー
+
+| 要素 | 挙動 |
+|------|------|
+| **ブランド行** | ホームアイコン + サイト名（トップへのリンク） |
+| **MENU** | 閲覧時は `menu` プラグイン出力のみ（旧来の検索・ナビ項目は除去） |
+| **編集時** | [EditSidebarHelp](#編集サイドバーヘルプ) を表示（MENU は非表示） |
+| **「.」リンク** | 左下に控えめ表示。未ログイン → ログイン、ログイン済 → ログアウト |
+
+### リサイズ可能スプリッター
+
+- **対象:** デスクトップ（1024px 以上）のみ
+- **操作:** サイドバー右端をドラッグ、またはキーボード（← / → で 8px 刻み）
+- **幅:** 200–400px（既定 280px）
+- **永続化:** `localStorage` キー `pukiwiki-skin-sidebar-width`
+
+### トップバー（上から）
+
+1. **`#head` スロット** — `#head` プラグインのヒーロー画像（[HEAD.md](HEAD.md)）。ページタイトルの**上**、メイン領域幅いっぱい（フルブリード）
+2. **ToolbarRow** — 編集ツールバー（`#toolbar` DOM 移譲）+ ログアウトアイコン（ログイン時のみ表示）
+3. **タイトル行** — `h1.title` + テーマ切替
+4. **パンくず** — `topicpath` プラグイン。FrontPage でも **Top** リンクを常時表示
+
+ツールバー非表示（未ログイン等）のときは ToolbarRow を省略し、上部余白も詰めます（`s26-app--no-toolbars`）。
+
+### 編集サイドバーヘルプ
+
+編集モード（`config.isEdit`）では左サイドバーに **EditSidebarHelp** を表示します。
+
+- **テキスト整形のルール** — 見出し・箇条書き・リンク等の早見表 → [FormattingRules](FormattingRules) への「全文を見る」リンク
+- **よく使うプラグイン** — `#head` / `#ref` / `#include` 等 → ヘルプページへのリンク
+
+編集フォーム下部にも FormattingRules と **プラグインマニュアル**（`PukiWiki/1.4/Manual/Plugin`）へのリンクがあります（`lib/html.php`）。
+
+### 本文・余白
+
+- 記事カード内に `#body` を配置。右バー（`#rightbar`）があるページは 2 カラム
+- ヘッダー画像は上余白ゼロでフルブリード。右ペイン（メイン）の左右余白はライト/ダークで統一
+- ライト/ダーク切替でメイン領域の**有効横幅**がずれないよう scrollbar 幅を吸収（2026-06-12 修正）
 
 ## デザイン
 
@@ -98,8 +140,14 @@ npm run dev     # Vite dev server（PHP 連携は手動）
 | 機能 | 状態 |
 |------|------|
 | アプリシェル（サイドバー / トップバー / ヒーロー） | 実装済 |
+| サイドバー MENU のみ + ブランド + 「.」ログイン/ログアウト | 実装済 |
+| サイドバーリサイズ（スプリッター） | 実装済（デスクトップ） |
+| `#head` タイトル上表示 | 実装済（`skin_app_extract_head_figures`） |
+| ToolbarRow（ツールバー + ログアウト） | 実装済 |
+| 編集サイドバーヘルプ（EditSidebarHelp） | 実装済 |
+| FrontPage パンくず（Top 常時） | 実装済 |
 | コマンドパレット（⌘K / Ctrl+K） | 実装済 |
-| ダーク / ライト | 実装済（`pukiwiki-skin-theme`） |
+| ダーク / ライト（横幅一致） | 実装済（`pukiwiki-skin-theme`） |
 | `$body` / `$menu` DOM 移譲 | 実装済（`adoptNode`、ID 維持） |
 | `ref-popup.js` | defer 読込（`#body` 内 #ref 向け） |
 | `edit-dragdrop.js` | 編集時のみ defer 読込 |

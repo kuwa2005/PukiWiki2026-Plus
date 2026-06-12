@@ -2,6 +2,8 @@
 
 `cmd=edit` の編集画面のみ有効です。
 
+React スキンでは編集時に左サイドバーへ **整形ルール・プラグイン早見表**（EditSidebarHelp）を表示し、フォーム下に FormattingRules / プラグインマニュアルへのリンクがあります。詳細: [SKIN-REACT.md](SKIN-REACT.md) §編集サイドバーヘルプ
+
 ## 機能
 
 1. **ファイル → textarea** — OS からファイルをドロップすると `plugin=attach&pcmd=api` へ POST し、ページに添付。成功後 `#ref(ファイル名)` をカーソル位置に挿入。
