@@ -5,6 +5,7 @@ export default function TopBar ({
   theme,
   onThemeToggle,
   onToggleSidebar,
+  headRef,
   titleRef,
   topicpathRef,
   toolbar
@@ -16,6 +17,8 @@ export default function TopBar ({
           <Icon name="menu" />
         </button>
       </div>
+
+      <div ref={headRef} className="s26-head-slot" />
 
       {toolbar}
 

@@ -317,6 +317,24 @@ a.s26-sidebar-site-title:hover {
   margin-top: 0.75rem;
 }
 
+.s26-head-slot:empty {
+  display: none;
+}
+
+.s26-head-slot:not(:empty) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0.75rem calc(-1 * var(--s26-main-gutter)) 0;
+  width: calc(100% + 2 * var(--s26-main-gutter));
+  box-sizing: border-box;
+}
+
+.s26-head-slot .plugin-head {
+  border-radius: var(--s26-radius);
+  overflow: hidden;
+}
+
 .s26-toolbar-adopt-only {
   position: absolute;
   width: 1px;

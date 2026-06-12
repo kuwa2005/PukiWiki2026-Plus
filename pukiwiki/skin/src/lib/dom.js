@@ -26,3 +26,13 @@ export function adoptNode (id, ref) {
   el.classList.add('s26-adopted')
   ref.current.appendChild(el)
 }
+
+/** Move any #head figures still inside #body into the hero slot (SSR fallback). */
+export function relocatePluginHead (slotRef, bodyRoot) {
+  if (!slotRef?.current || !bodyRoot) return
+  const bodyEl = bodyRoot.querySelector?.('#body') || bodyRoot
+  const figures = bodyEl.querySelectorAll('figure.plugin-head')
+  for (const fig of figures) {
+    slotRef.current.appendChild(fig)
+  }
+}

@@ -208,6 +208,44 @@ header('Cache-control: no-cache');
 header('Pragma: no-cache');
 header('Content-Type: text/html; charset=' . CONTENT_CHARSET);
 
+if (! function_exists('skin_app_extract_head_figures')) {
+/**
+ * Pull #head plugin figures out of converted body HTML (render once above title).
+ *
+ * @return array{html:string,figures:string}
+ */
+function skin_app_extract_head_figures($html)
+{
+	if (! is_string($html) || $html === '' || strpos($html, 'plugin-head') === FALSE) {
+		return array('html' => $html, 'figures' => '');
+	}
+	$figures = array();
+	$stripped = preg_replace_callback(
+		'#<figure\s+class="plugin-head\b[^"]*"[^>]*>.*?</figure>\s*#si',
+		function ($m) use (&$figures) {
+			$figures[] = $m[0];
+			return '';
+		},
+		$html
+	);
+	if ($figures === array()) {
+		return array('html' => $html, 'figures' => '');
+	}
+	$stripped = preg_replace('#<p>\s*</p>\s*#si', '', $stripped);
+	return array(
+		'html'    => $stripped,
+		'figures' => implode("\n", $figures),
+	);
+}
+}
+
+$skin_app_head_figures = '';
+if (is_string($body) && $body !== '') {
+	$__skin_app_head = skin_app_extract_head_figures($body);
+	$body = $__skin_app_head['html'];
+	$skin_app_head_figures = $__skin_app_head['figures'];
+}
+
 if (! function_exists('skin_app_toolbar_hidden')) {
 function skin_app_toolbar_hidden($key, $x = 20, $y = 20) {
 	$lang  = & $GLOBALS['_LANG']['skin'];
@@ -247,6 +285,10 @@ function skin_app_toolbar_hidden($key, $x = 20, $y = 20) {
 <div id="skin-app-ssr" hidden aria-hidden="true">
 <?php if ($menu) { ?>
  <aside id="menubar"><?php echo $menu ?></aside>
+<?php } ?>
+
+<?php if ($skin_app_head_figures !== '') { ?>
+ <div id="skin-head-slot"><?php echo $skin_app_head_figures ?></div>
 <?php } ?>
 
  <article id="body"><?php echo $body ?></article>
